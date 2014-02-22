@@ -1,0 +1,25 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="scienceSpot.cs">
+    <Files>
+      <File FileName="RoverScienceGUI.cs" Line="18" Column="3" />
+      <File FileName="RoverScience.cs" Line="1" Column="1" />
+      <File FileName="ConsoleGUI.cs" Line="17" Column="1" />
+      <File FileName="Rover.cs" Line="44" Column="3" />
+      <File FileName="scienceSpot.cs" Line="41" Column="47" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="RoverScience" expanded="True">
+            <Node name="scienceSpot.cs" selected="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

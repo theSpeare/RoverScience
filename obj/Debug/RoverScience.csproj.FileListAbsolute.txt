@@ -1,0 +1,17 @@
+C:\Games\KSP\Plugin Projects\RoverScience\obj\Debug\ResolveAssemblyReference.cache
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\RoverScience.dll
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\RoverScience.pdb
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\Assembly-CSharp.dll
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\UnityEngine.dll
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\System.Xml.dll
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\Mono.Cecil.dll
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\TDx.TDxInput.dll
+C:\Games\KSP\Plugin Projects\RoverScience\bin\Debug\Mono.Security.dll
+C:\Games\KSP\Plugin Projects\RoverScience\obj\Debug\RoverScience.dll
+C:\Games\KSP\Plugin Projects\RoverScience\obj\Debug\RoverScience.pdb
+C:\Users\Lui\Documents\GitHub\roverScience\bin\Debug\RoverScience.dll
+C:\Users\Lui\Documents\GitHub\roverScience\bin\Debug\RoverScience.pdb
+C:\Users\Lui\Documents\GitHub\roverScience\obj\Debug\RoverScience.csprojResolveAssemblyReference.cache
+C:\Users\Lui\Documents\GitHub\roverScience\obj\Debug\RoverScience.dll
+C:\Users\Lui\Documents\GitHub\roverScience\obj\Debug\RoverScience.pdb
