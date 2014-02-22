@@ -64,7 +64,7 @@ namespace RoverScience
 
 
 				if (debugGUI.isOpen) {
-				debugGUI.rect = GUILayout.Window (2358921, debugGUI.rect, drawDebugGUI, "Debug");
+				debugGUI.rect = GUILayout.Window (9358921, debugGUI.rect, drawDebugGUI, "Debug");
 				}
 
 

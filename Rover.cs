@@ -121,13 +121,13 @@ namespace RoverScience
 
 		public double getDistanceBetweenTwoPoints(COORDS _from, COORDS _to)
 		{
-			return Math.Sqrt(Math.Pow ((_from.x - _to.x), 2) + Math.Pow ((_from.y - _to.y), 2));
+			return Math.Sqrt(Math.Pow ((_from.z - _to.z), 2) + Math.Pow ((_from.y - _to.y), 2));
 		}
 
 
 		public double getDistanceFromCoords (COORDS target_location)
 		{
-			return (Math.Sqrt(Math.Pow ((location.x - target_location.x), 2) + Math.Pow ((location.y - target_location.y), 2)));
+			return (Math.Sqrt(Math.Pow ((location.z - target_location.z), 2) + Math.Pow ((location.y - target_location.y), 2)));
 		}
 
 
@@ -135,20 +135,20 @@ namespace RoverScience
 		{
 			// Rover x,y position
 
-			double dx = Math.Abs(location.x - target_location.x);
+			double dx = Math.Abs(location.z - target_location.z);
 			double dy = Math.Abs(location.y - target_location.y);
 			double solveFor = Math.Round(((180 / Math.PI) * (Math.Atan (dx/dy))), 4);
 
 			// Some old trig to determine bearing from rover to target
-			if ((location.x < target_location.x) && (location.y > target_location.y)){
+			if ((location.z < target_location.z) && (location.y > target_location.y)){
 				return (180 - solveFor);
 			}
 
-			if ((location.x > target_location.x) && (location.y > target_location.y)){
+			if ((location.z > target_location.z) && (location.y > target_location.y)){
 				return (180 + solveFor);
 			}
 
-			if ((location.x > target_location.x) && (location.y < target_location.y)){
+			if ((location.z > target_location.z) && (location.y < target_location.y)){
 				return (360 - solveFor);
 			}
 
@@ -180,7 +180,7 @@ namespace RoverScience
 			double randomTheta = (randomAngle*(Math.PI));
 			randomRadius = rand.Next (minRadius, maxRadius);
 
-			scienceSpot.location.x = (randomRadius * (Math.Cos (randomTheta))) + location.x;
+			scienceSpot.location.z = (randomRadius * (Math.Cos (randomTheta))) + location.z;
 			scienceSpot.location.y = (randomRadius * (Math.Cos (randomTheta))) + location.y;
 			scienceSpot.established = true;
 
@@ -200,7 +200,7 @@ namespace RoverScience
 				// SET LANDING SITE
 				if (numberWheelsLanded > 0) {
 					// set x by y position
-					landingSite.location.x = FlightGlobals.ActiveVessel.GetWorldPos3D ().x;
+					landingSite.location.z = FlightGlobals.ActiveVessel.GetWorldPos3D ().z;
 					landingSite.location.y = FlightGlobals.ActiveVessel.GetWorldPos3D ().y;
 
 					resetDistanceTravelled ();
@@ -219,7 +219,7 @@ namespace RoverScience
 					Debug.Log ("Landing site reset!");
 
 					resetDistanceTravelled ();
-					landingSite.location.x = 0;
+					landingSite.location.z = 0;
 					landingSite.location.y = 0;
 				}
 			}
