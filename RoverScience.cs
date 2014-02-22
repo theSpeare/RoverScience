@@ -9,8 +9,15 @@ namespace RoverScience
 
 	#pragma warning disable 0108
 
-	public class RoverScience : PartModule, IScienceDataContainer
+	public class RoverScience : ModuleScienceContainer
 	{
+		/*
+		 * CHECK THIS OUT
+		 * 
+		 * CelBody.GetRelblahblah
+		 * ALSO CHECK OUT GETWORLDPOS PROPERLY
+		 * 
+		 * */
 
 		//public List<Part> vesselParts = new List<Part>();
 		public static RoverScience Instance = null;

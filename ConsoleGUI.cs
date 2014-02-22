@@ -25,7 +25,17 @@ namespace RoverScience
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 			scrollPosition.y = 10000;
 
+			GUILayout.Label ("VesselX - " + rover.location.x);
+			GUILayout.Label ("VesselY - " + rover.location.y);
+			GUILayout.Label ("VesselZ - " + rover.location.z);
 
+			GUILayout.Label ("");
+
+			GUILayout.Label ("ScienceX - " + rover.scienceSpot.location.x);
+			GUILayout.Label ("ScienceY - " + rover.scienceSpot.location.y);
+			GUILayout.Label ("ScienceZ - " + rover.scienceSpot.location.z);
+
+			GUILayout.Label ("");
 
 			if (!rover.scienceSpot.established) {
 				// print out console with messages and stuff

@@ -14,6 +14,7 @@ namespace RoverScience
 
 		public double x;
 		public double y;
+		public double z;
 	}
 
 
@@ -25,6 +26,7 @@ namespace RoverScience
 		public _ScienceSpot scienceSpot = new _ScienceSpot();
 		public _landSite landingSite = new _landSite();
 
+		public Vector3d transferLocation = new Vector3d();
 		public COORDS location = new COORDS ();
 
 		public double distanceTravelled = 0;
@@ -50,7 +52,7 @@ namespace RoverScience
 		public double bearingToScienceSpot
 		{
 			get {
-				return getBearingFromCoords (scienceSpot.location, distanceFromScienceSpot);
+				return getBearingFromCoords (scienceSpot.location);
 			}
 		}
 
@@ -113,11 +115,7 @@ namespace RoverScience
 
 		public double getDistanceFromScienceSite()
 		{
-			COORDS rover_location = new COORDS ();
-			rover_location.x = FlightGlobals.ActiveVessel.GetWorldPos3D ().x;
-			rover_location.y = FlightGlobals.ActiveVessel.GetWorldPos3D ().y;
-
-			return getDistanceBetweenTwoPoints (rover_location, landingSite.location);
+			return getDistanceBetweenTwoPoints (location, landingSite.location);
 			//return Math.Sqrt(Math.Pow ((x - landingSite.location.x), 2) + Math.Pow ((y - landingSite.location.y), 2));
 		}
 
@@ -129,36 +127,28 @@ namespace RoverScience
 
 		public double getDistanceFromCoords (COORDS target_location)
 		{
-			// Rover x,y position
-			COORDS rover_location = new COORDS ();
-			rover_location.x = FlightGlobals.ActiveVessel.GetWorldPos3D ().x;
-			rover_location.y = FlightGlobals.ActiveVessel.GetWorldPos3D ().y;
-
-			return (Math.Sqrt(Math.Pow ((rover_location.x - target_location.x), 2) + Math.Pow ((rover_location.y - target_location.y), 2)));
+			return (Math.Sqrt(Math.Pow ((location.x - target_location.x), 2) + Math.Pow ((location.y - target_location.y), 2)));
 		}
 
 
-		public double getBearingFromCoords (COORDS target_location, double distance)
+		public double getBearingFromCoords (COORDS target_location)
 		{
 			// Rover x,y position
-			COORDS rover_location = new COORDS ();
-			rover_location.x = FlightGlobals.ActiveVessel.GetWorldPos3D ().x;
-			rover_location.y = FlightGlobals.ActiveVessel.GetWorldPos3D ().y;
 
-			double dx = Math.Abs(rover_location.x - target_location.x);
-			double dy = Math.Abs(rover_location.y - target_location.y);
+			double dx = Math.Abs(location.x - target_location.x);
+			double dy = Math.Abs(location.y - target_location.y);
 			double solveFor = Math.Round(((180 / Math.PI) * (Math.Atan (dx/dy))), 4);
 
 			// Some old trig to determine bearing from rover to target
-			if ((rover_location.x < target_location.x) && (rover_location.y > target_location.y)){
+			if ((location.x < target_location.x) && (location.y > target_location.y)){
 				return (180 - solveFor);
 			}
 
-			if ((rover_location.x > target_location.x) && (rover_location.y > target_location.y)){
+			if ((location.x > target_location.x) && (location.y > target_location.y)){
 				return (180 + solveFor);
 			}
 
-			if ((rover_location.x > target_location.x) && (rover_location.y < target_location.y)){
+			if ((location.x > target_location.x) && (location.y < target_location.y)){
 				return (360 - solveFor);
 			}
 
@@ -171,8 +161,13 @@ namespace RoverScience
 		// set current rover location
 		public void setRoverLocation()
 		{
-			location.x = FlightGlobals.ActiveVessel.GetWorldPos3D ().x;
-			location.y = FlightGlobals.ActiveVessel.GetWorldPos3D ().y;
+			transferLocation = FlightGlobals.ActiveVessel.mainBody.GetWorldSurfacePosition (
+				FlightGlobals.ActiveVessel.latitude, FlightGlobals.ActiveVessel.longitude, FlightGlobals.ActiveVessel.altitude);
+
+			location.x = transferLocation.x;
+			location.y = transferLocation.y;
+			location.z = transferLocation.z;
+
 		}
 
 		// set found science spot
