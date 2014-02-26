@@ -76,6 +76,10 @@ namespace RoverScience
 				rover.setScienceSpotLocation ();
 			}
 
+			if (GUILayout.Button ("Analyze Science")) {
+				_roverScience.analyzeScienceSample ();
+			}
+
 			if (GUILayout.Button ("CLEAR CONSOLE")) {
 				consolePrintOut.Clear ();
 			}

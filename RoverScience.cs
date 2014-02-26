@@ -9,20 +9,14 @@ namespace RoverScience
 
 	#pragma warning disable 0108
 
-	public class RoverScience : ModuleScienceContainer
+	public class RoverScience : PartModule
 	{
-		/*
-		 * CHECK THIS OUT
-		 * 
-		 * CelBody.GetRelblahblah
-		 * ALSO CHECK OUT GETWORLDPOS PROPERLY
-		 * 
-		 * */
-
-		//public List<Part> vesselParts = new List<Part>();
+	
 		public static RoverScience Instance = null;
 
 		public System.Random rand = new System.Random();
+
+		public ModuleScienceContainer container;
 
 		public double distCounter;
 
@@ -102,7 +96,7 @@ namespace RoverScience
 				delMET = (double)0;
 				oldMET = vessel.missionTime;
 
-
+				container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
 
 				RenderingManager.AddToPostDrawQueue (0, RoverScienceGUIM.drawGUI);
 			} else {
@@ -117,6 +111,8 @@ namespace RoverScience
 			if (IsPrimary) {
 				// check if the rover fits conditions
 				// set delMET for distance calculations with horizontal surface speed.
+				ModuleScienceContainer container = this.container;
+
 				if (checkRoverValidStatus()) timeKeeper ();
 
 				// rover stuff
@@ -147,6 +143,16 @@ namespace RoverScience
 				sciValues = rover.scienceSpot.getValues ();
 				rover.scienceSpot.reset ();
 
+				ScienceExperiment sciExperiment = ResearchAndDevelopment.GetExperiment("RoverScienceExperiment");
+				ScienceSubject sciSubject = ResearchAndDevelopment.GetExperimentSubject (sciExperiment, ExperimentSituations.SrfLanded, vessel.mainBody, "");
+
+				Debug.Log("GetReferenceDataValue: " + ResearchAndDevelopment.GetReferenceDataValue (100, sciSubject));
+				Debug.Log("GetScienceValue: " + ResearchAndDevelopment.GetScienceValue (100, sciSubject, 1));
+				Debug.Log("GetSubjectValue: " + ResearchAndDevelopment.GetSubjectValue (sciSubject.subjectValue, sciSubject));
+
+
+
+				StoreScience (container, sciSubject, 50);
 
 				Debug.Log ("Science retrieved! - " + rover.scienceSpot.potentialScience);
 			} else {
@@ -154,6 +160,25 @@ namespace RoverScience
 			}
 		}
 
+		protected bool StoreScience(ModuleScienceContainer container, ScienceSubject subject, float data)
+		{
+
+			// Check constraints before calling to avoid status spam from the container itself
+			if (container.capacity > 0 && container.GetScienceCount() >= container.capacity)
+				return false;
+				
+			data = 100;
+			float xmitValue = 1.0f;
+			float labBoost = 0.2f;
+
+			var new_data = new ScienceData(data, xmitValue, labBoost, subject.id, subject.title);
+
+			if (container.AddData (new_data))
+				return true;
+			
+
+			return false;
+		}
 
 
 		// This handles what happens after the distance travelled passes the distance roll
