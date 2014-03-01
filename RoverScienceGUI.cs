@@ -77,6 +77,7 @@ namespace RoverScience
 				consolePrintOut.Clear ();
 			}
 			consolePrintOut.Add (line);
+			scrollPosition.y = 10000;
 		}
 
 		public void addRandomConsoleJunk()

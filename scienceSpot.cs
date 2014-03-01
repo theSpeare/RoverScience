@@ -28,37 +28,41 @@ namespace RoverScience
 
 		public void generateScience()
 		{
-			int chance = rand.Next (0, 100);
-
-			if (chance < 2) {
+			if (rand.Next (0, 100) < 2) {
 				potentialString = getNamePotential (potential.vhigh);
-				potentialScience = rand.Next (300, 1000);
+				potentialScience = rand.Next (1000, 2000);
+				return;
+			} 
 
-			} else if (chance < 10) {
+			if (rand.Next (0, 100) < 12) {
 				potentialString = getNamePotential (potential.high);
-				potentialScience = rand.Next (150, 500);
+				potentialScience = rand.Next (400, 1000);
+				return;
+			} 
 
-			} else if (chance < 40) {
+			if (rand.Next (0, 100) < 40) {
 				potentialString = getNamePotential (potential.normal);
-				potentialScience = rand.Next (10, 100);
+				potentialScience = rand.Next (200, 400);
+				return;
+			} 
 
-			} else if (chance < 70) {
+			if (rand.Next (0, 100) < 70) {
 				potentialString = getNamePotential (potential.low);
-				potentialScience = rand.Next (20, 50);
-
-			} else {
-				potentialString = getNamePotential (potential.vlow);
-				potentialScience = rand.Next (0, 10);
-
+				potentialScience = rand.Next (20, 300);
+				return;
 			}
+				
+			potentialString = getNamePotential (potential.vlow);
+			potentialScience = rand.Next (0, 10);
+
 		}
 
 		public void reset()
 		{
 			established = false;
 			potentialScience = 0;
-			location.x = 0;
-			location.y = 0;
+			location.longitude = 0;
+			location.latitude = 0;
 
 			RoverScience.Instance.rover.resetDistanceTravelled ();
 			RoverScience.Instance.rover.totalDistanceTravelled = 0;

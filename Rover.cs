@@ -11,17 +11,15 @@ namespace RoverScience
 	{
 		public double latitude;
 		public double longitude;
-
-		public double x;
-		public double y;
-		public double z;
 	}
 
 
-
+	// Much of the coordinate work with latitude/longitude in this source is only functional with the work here:
+	// http://www.movable-type.co.uk/scripts/latlong.html
 
 	public class Rover
 	{
+
 		public System.Random rand = new System.Random();
 		public _ScienceSpot scienceSpot = new _ScienceSpot();
 		public _landSite landingSite = new _landSite();
@@ -35,17 +33,17 @@ namespace RoverScience
 
 		public int randomRadius = 0;
 
-		public double distanceFromSite
+		public double distanceFromLandingSite
 		{
 			get{
-				return getDistanceFromScienceSite();
+				return getDistanceBetweenTwoPoints (location, landingSite.location);
 			}
 		}
 
 		public double distanceFromScienceSpot
 		{
 			get{
-				return getDistanceFromCoords (scienceSpot.location);
+				return getDistanceBetweenTwoPoints (location, scienceSpot.location);
 			}
 		}
 
@@ -91,103 +89,118 @@ namespace RoverScience
 			}
 		}
 
-		public double latitude
-		{
-			get
-			{
-				return FlightGlobals.ActiveVessel.latitude;
-			}
-		}
-
-		public double longitude
-		{
-			get
-			{
-				return FlightGlobals.ActiveVessel.longitude;
-			}
-		}
-
 
 		public void calculateDistanceTravelled(double delMET)
 		{
 			distanceTravelled += (RoverScience.Instance.vessel.srfSpeed) * delMET;
 		}
 
-		public double getDistanceFromScienceSite()
-		{
-			return getDistanceBetweenTwoPoints (location, landingSite.location);
-			//return Math.Sqrt(Math.Pow ((x - landingSite.location.x), 2) + Math.Pow ((y - landingSite.location.y), 2));
-		}
-
 		public double getDistanceBetweenTwoPoints(COORDS _from, COORDS _to)
 		{
-			return Math.Sqrt(Math.Pow ((_from.z - _to.z), 2) + Math.Pow ((_from.y - _to.y), 2));
+
+			double bodyRadius = FlightGlobals.ActiveVessel.mainBody.Radius;
+			double dLat = (_to.latitude - _from.latitude).ToRadians ();
+			double dLon = (_to.longitude - _from.longitude).ToRadians ();
+			double lat1 = _from.latitude.ToRadians ();
+			double lat2 = _to.latitude.ToRadians ();
+
+			double a = Math.Sin(dLat/2) * Math.Sin(dLat/2) +
+				Math.Sin(dLon/2) * Math.Sin(dLon/2) * Math.Cos(lat1) * Math.Cos(lat2); 
+			double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1-a)); 
+			double d = bodyRadius * c;
+
+			return Math.Round(d, 4);
 		}
 
 
-		public double getDistanceFromCoords (COORDS target_location)
-		{
-			return (Math.Sqrt(Math.Pow ((location.z - target_location.z), 2) + Math.Pow ((location.y - target_location.y), 2)));
-		}
-
-
-		public double getBearingFromCoords (COORDS target_location)
+		public double getBearingFromCoords (COORDS target)
 		{
 			// Rover x,y position
 
-			double dx = Math.Abs(location.z - target_location.z);
-			double dy = Math.Abs(location.y - target_location.y);
-			double solveFor = Math.Round(((180 / Math.PI) * (Math.Atan (dx/dy))), 4);
+			double dLat = (target.latitude - location.latitude).ToRadians ();
+			double dLon = (target.longitude - location.longitude).ToRadians ();
+			double lat1 = location.latitude.ToRadians ();
+			double lat2 = target.latitude.ToRadians ();
 
-			// Some old trig to determine bearing from rover to target
-			if ((location.z < target_location.z) && (location.y > target_location.y)){
-				return (180 - solveFor);
-			}
+			double y = Math.Sin(dLon) * Math.Cos(lat2);
+			double x = Math.Cos(lat1)*Math.Sin(lat2) -
+				Math.Sin(lat1)*Math.Cos(lat2)*Math.Cos(dLon);
 
-			if ((location.z > target_location.z) && (location.y > target_location.y)){
-				return (180 + solveFor);
-			}
+			double bearing = Math.Atan2(y, x).ToDegrees();
+			//bearing = (bearing + 180) % 360;
 
-			if ((location.z > target_location.z) && (location.y < target_location.y)){
-				return (360 - solveFor);
-			}
-
-
-
-			return solveFor;
-
+			//return bearing % 360;
+			return (bearing + 360) % 360;
 		}
+
 
 		// set current rover location
 		public void setRoverLocation()
 		{
-			transferLocation = FlightGlobals.ActiveVessel.mainBody.GetWorldSurfacePosition (
-				FlightGlobals.ActiveVessel.latitude, FlightGlobals.ActiveVessel.longitude, FlightGlobals.ActiveVessel.altitude);
-
-			location.x = transferLocation.x;
-			location.y = transferLocation.y;
-			location.z = transferLocation.z;
-
+			location.latitude = FlightGlobals.ActiveVessel.latitude;
+			location.longitude = FlightGlobals.ActiveVessel.longitude;
 		}
 
 		// set found science spot
 		public void setScienceSpotLocation()
 		{
 			int minRadius = 25;
-			int maxRadius = 50;
+			int maxRadius = 100;
+
+			randomRadius = rand.Next (minRadius, maxRadius);
+
+			double bodyRadius = FlightGlobals.ActiveVessel.mainBody.Radius;
+			Debug.Log (FlightGlobals.ActiveVessel.mainBody.Radius.ToString ());
 
 			double randomAngle = rand.NextDouble () * (double)(1.9);
 			double randomTheta = (randomAngle*(Math.PI));
-			randomRadius = rand.Next (minRadius, maxRadius);
 
-			scienceSpot.location.z = (randomRadius * (Math.Cos (randomTheta))) + location.z;
-			scienceSpot.location.y = (randomRadius * (Math.Cos (randomTheta))) + location.y;
+			double angularDistance = randomRadius/bodyRadius;
+
+			Debug.Log ("angularDistance " + angularDistance);
+			Debug.Log ("Math.Cos(angularDistance) " + Math.Cos (angularDistance));
+			Debug.Log ("randomRadius: " + randomRadius);
+			Debug.Log ("bodyRadius: " + bodyRadius);
+
+
+
+			double currentLatitude = FlightGlobals.ActiveVessel.latitude.ToRadians ();
+			double currentLongitude = FlightGlobals.ActiveVessel.longitude.ToRadians ();
+
+			Debug.Log ("currentLatitude: " + currentLatitude);
+			Debug.Log ("currentLongitude: " + currentLongitude);
+
+			double spotLat = Math.Asin( Math.Sin(currentLatitude)*Math.Cos(angularDistance) + 
+				Math.Cos(currentLatitude)*Math.Sin(angularDistance)*Math.Cos(randomTheta));
+
+			Debug.Log ("Math.Sin(currentLatitude) " + Math.Sin (currentLatitude));
+
+			Debug.Log ("Math.Cos(randomTheta) " + Math.Cos (randomTheta));
+			Debug.Log ("Math.Sin(currentLatitude)*Math.Cos(angularDistance) " + (Math.Sin (currentLatitude) * Math.Cos (angularDistance)));
+			Debug.Log ("Math.Cos(currentLatitude)*Math.Sin(angularDistance)*Math.Cos(randomTheta) " + (Math.Cos (currentLatitude) * Math.Sin (angularDistance) * Math.Cos (randomTheta)));
+
+			Debug.Log ("spotLat: " + spotLat);
+
+			double spotLon = currentLongitude + Math.Atan2(Math.Sin(randomTheta)*Math.Sin(angularDistance)*Math.Cos(currentLatitude), 
+				Math.Cos(angularDistance)-Math.Sin(currentLatitude)*Math.Sin(spotLat));
+
+			Debug.Log ("spotLon: " + spotLon);
+
+			scienceSpot.location.latitude = spotLat.ToDegrees ();
+			scienceSpot.location.longitude = spotLon.ToDegrees ();
+
+			Debug.Log ("scienceSpot.location.latitude: " + scienceSpot.location.latitude);
+			Debug.Log ("scienceSpot.location.longitude: " + scienceSpot.location.longitude);
+
+
 			scienceSpot.established = true;
+			scienceSpot.generateScience ();
+
 
 			Debug.Log ("randomRadius selected: " + randomRadius);
 			Debug.Log ("randomAngle: " + Math.Round(randomAngle, 4));
 			Debug.Log ("random_theta (radians): " + Math.Round(randomTheta, 4));
-			Debug.Log ("random_theta (degrees?): " + Math.Round((randomTheta * (180/Math.PI)), 4));
+			Debug.Log ("random_theta (degrees?): " + Math.Round((randomTheta.ToDegrees()), 4));
 			Debug.Log ("distance to scienceSpot: " + distanceFromScienceSpot);
 		}
 
@@ -200,8 +213,8 @@ namespace RoverScience
 				// SET LANDING SITE
 				if (numberWheelsLanded > 0) {
 					// set x by y position
-					landingSite.location.z = FlightGlobals.ActiveVessel.GetWorldPos3D ().z;
-					landingSite.location.y = FlightGlobals.ActiveVessel.GetWorldPos3D ().y;
+					landingSite.location.longitude = FlightGlobals.ActiveVessel.longitude;
+					landingSite.location.latitude = FlightGlobals.ActiveVessel.latitude;
 
 					resetDistanceTravelled ();
 
@@ -219,8 +232,6 @@ namespace RoverScience
 					Debug.Log ("Landing site reset!");
 
 					resetDistanceTravelled ();
-					landingSite.location.z = 0;
-					landingSite.location.y = 0;
 				}
 			}
 
@@ -280,6 +291,19 @@ namespace RoverScience
 
 	}
 
+
+	public static class NumericExtensions
+	{
+		public static double ToRadians(this double val)
+		{
+			return (Math.PI / 180) * val;
+		}
+
+		public static double ToDegrees(this double val)
+		{
+			return (180 / Math.PI) * val;
+		}
+	}
 
 }
 

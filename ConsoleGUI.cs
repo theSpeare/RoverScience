@@ -6,8 +6,11 @@ using UnityEngine;
 
 namespace RoverScience
 {
+
 	public partial class RoverScienceGUI
 	{
+	
+
 		Vessel vessel
 		{
 			get{
@@ -17,28 +20,23 @@ namespace RoverScience
 
 		private void drawRoverConsoleGUI (int windowID)
 		{
-			// FIND HEADING
-
-
 
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
-			scrollPosition.y = 10000;
 
-			GUILayout.Label ("VesselX - " + rover.location.x);
-			GUILayout.Label ("VesselY - " + rover.location.y);
-			GUILayout.Label ("VesselZ - " + rover.location.z);
+			GUILayout.Label ("roverLat - " + rover.location.latitude);
+			GUILayout.Label ("roverLong - " + rover.location.longitude);
+			GUILayout.Label ("Distance to: " + rover.distanceFromScienceSpot);
+			GUILayout.Label ("scienceLat - " + rover.scienceSpot.location.latitude);
+			GUILayout.Label ("scienceLong - " + rover.scienceSpot.location.longitude);
 
 			GUILayout.Label ("");
-
-			GUILayout.Label ("ScienceX - " + rover.scienceSpot.location.x);
-			GUILayout.Label ("ScienceY - " + rover.scienceSpot.location.y);
-			GUILayout.Label ("ScienceZ - " + rover.scienceSpot.location.z);
+			GUILayout.Label ("Body Radius: " + FlightGlobals.ActiveVessel.mainBody.Radius);
 
 			GUILayout.Label ("");
 
 			if (!rover.scienceSpot.established) {
-				// print out console with messages and stuff
+				// Print out console with messages and stuff
 				foreach (string line in consolePrintOut) {
 					GUILayout.Label (line);
 				}
@@ -49,6 +47,7 @@ namespace RoverScience
 					GUILayout.Label ("[POTENTIAL SCIENCE SPOT]");
 					GUILayout.Label ("Distance to: " + rover.distanceFromScienceSpot);
 					GUILayout.Label ("Bearing of Site: " + rover.bearingToScienceSpot);
+					GUILayout.Label ("Rover Bearing: " + rover.heading);
 					GUILayout.Label ("Rel. Bearing: " + relativeBearing);
 
 					if (relativeBearing < 0) {
@@ -72,10 +71,6 @@ namespace RoverScience
 			GUILayout.EndScrollView ();
 			GUILayout.EndVertical ();
 
-			if (GUILayout.Button ("Find Science Spot")) {
-				rover.setScienceSpotLocation ();
-			}
-
 			if (GUILayout.Button ("Analyze Science")) {
 				_roverScience.analyzeScienceSample ();
 			}
@@ -88,8 +83,8 @@ namespace RoverScience
 				rover.scienceSpot.established = false;
 			}
 
-			if (GUILayout.Button ("Add Random")) {
-				addToConsole ("asdawjdklasd");
+			if (GUILayout.Button ("Print toEdit")) {
+				Debug.Log ("toEdit: " + toEdit);
 			}
 
 			if (GUILayout.Button ("Close Window")) {
@@ -100,5 +95,7 @@ namespace RoverScience
 			GUI.DragWindow ();
 		}
 	}
+
+
 }
 

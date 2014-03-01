@@ -23,6 +23,8 @@ namespace RoverScience
 		public Rover rover = new Rover ();
 		RoverScienceGUI RoverScienceGUIM = new RoverScienceGUI ();
 
+
+
 		double oldMET = (double)0;
 		double delMET = (double)0;
 
@@ -135,7 +137,6 @@ namespace RoverScience
 				oldMET = vessel.missionTime;
 		}
 
-
 		public void analyzeScienceSample()
 		{
 			if (rover.scienceSpotReached) {
@@ -146,13 +147,12 @@ namespace RoverScience
 				ScienceExperiment sciExperiment = ResearchAndDevelopment.GetExperiment("RoverScienceExperiment");
 				ScienceSubject sciSubject = ResearchAndDevelopment.GetExperimentSubject (sciExperiment, ExperimentSituations.SrfLanded, vessel.mainBody, "");
 
-				Debug.Log("GetReferenceDataValue: " + ResearchAndDevelopment.GetReferenceDataValue (100, sciSubject));
-				Debug.Log("GetScienceValue: " + ResearchAndDevelopment.GetScienceValue (100, sciSubject, 1));
-				Debug.Log("GetSubjectValue: " + ResearchAndDevelopment.GetSubjectValue (sciSubject.subjectValue, sciSubject));
+				sciSubject.subjectValue = 1;
+				sciSubject.scienceCap = 2000;
+				float sciData = sciValues.potentialScience;
 
 
-
-				StoreScience (container, sciSubject, 50);
+				StoreScience (container, sciSubject, sciData);
 
 				Debug.Log ("Science retrieved! - " + rover.scienceSpot.potentialScience);
 			} else {
@@ -167,7 +167,6 @@ namespace RoverScience
 			if (container.capacity > 0 && container.GetScienceCount() >= container.capacity)
 				return false;
 				
-			data = 100;
 			float xmitValue = 1.0f;
 			float labBoost = 0.2f;
 
@@ -196,23 +195,22 @@ namespace RoverScience
 				Debug.Log ("" + rover.distanceCheck + " meter mark reached");
 
 				// Reroll distanceCheck value
-				rover.distanceCheck = rand.Next (20, 70);
+				rover.distanceCheck = rand.Next (20, 50);
 
 				// farther you are from established site the higher the chance of striking science!
 				int rNum = rand.Next (0, 100);
-				double dist = rover.distanceFromSite;
-				double chanceAlgorithm = dist < 100 ?
-					(0.75) * dist : 
-					(0.5) * dist + 60;
+				double dist = rover.distanceFromLandingSite;
+				double chanceAlgorithm = 0.75 * dist;
 
-				double chance = (chanceAlgorithm < 100) ? chanceAlgorithm : 100;
+				double chance = (chanceAlgorithm < 75) ? chanceAlgorithm : 75;
 
+				Debug.Log ("rNum: " + rNum);
+				Debug.Log ("chance: " + chance);
 				// rNum is a random number between 0 and 100
 				// chance is the percentage number we check for to determine a successful roll
 				// higher chance == higher success roll chance
 				if ((double)rNum <= chance) {
 					rover.setScienceSpotLocation ();
-					rover.scienceSpot.generateScience ();
 
 					RoverScienceGUIM.clearConsole ();
 
