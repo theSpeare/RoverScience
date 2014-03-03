@@ -17,7 +17,8 @@ namespace RoverScience
 		public System.Random rand = new System.Random();
 
 		public ModuleScienceContainer container;
-
+		public ModuleCommand command;
+		
 		public double distCounter;
 
 		public Rover rover = new Rover ();
@@ -99,7 +100,8 @@ namespace RoverScience
 				oldMET = vessel.missionTime;
 
 				container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
-
+				command = part.Modules["ModuleCommand"] as ModuleCommand;
+				
 				RenderingManager.AddToPostDrawQueue (0, RoverScienceGUIM.drawGUI);
 			} else {
 				// For when a duplicate PartModule is found
