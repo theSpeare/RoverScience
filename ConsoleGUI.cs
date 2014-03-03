@@ -10,7 +10,8 @@ namespace RoverScience
 	public partial class RoverScienceGUI
 	{
 	
-
+		// Leave this alone. PartModule has its own vessel class which SHOULD do the job but
+		// For some reason removing this seemed to destroy a lot of function.
 		Vessel vessel
 		{
 			get{
@@ -24,19 +25,9 @@ namespace RoverScience
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 
-			GUILayout.Label ("roverLat - " + rover.location.latitude);
-			GUILayout.Label ("roverLong - " + rover.location.longitude);
-			GUILayout.Label ("Distance to: " + rover.distanceFromScienceSpot);
-			GUILayout.Label ("scienceLat - " + rover.scienceSpot.location.latitude);
-			GUILayout.Label ("scienceLong - " + rover.scienceSpot.location.longitude);
-
-			GUILayout.Label ("");
-			GUILayout.Label ("Body Radius: " + FlightGlobals.ActiveVessel.mainBody.Radius);
-
-			GUILayout.Label ("");
 
 			if (!rover.scienceSpot.established) {
-				// Print out console with messages and stuff
+				// PRINT OUT CONSOLE CONTENTS
 				foreach (string line in consolePrintOut) {
 					GUILayout.Label (line);
 				}
@@ -70,22 +61,24 @@ namespace RoverScience
 
 			GUILayout.EndScrollView ();
 			GUILayout.EndVertical ();
-
+			
+			// ACTIVATE ROVER BUTTON
+			
 			if (GUILayout.Button ("Analyze Science")) {
 				_roverScience.analyzeScienceSample ();
-			}
-
-			if (GUILayout.Button ("CLEAR CONSOLE")) {
-				consolePrintOut.Clear ();
 			}
 
 			if (GUILayout.Button ("Reset Science Site")) {
 				rover.scienceSpot.established = false;
 			}
-
-			if (GUILayout.Button ("Print toEdit")) {
-				Debug.Log ("toEdit: " + toEdit);
+			
+			if (GUILayout.Button ("Control from Part")) {
+				//_roverScience.command.SetReference();
+				Debug.Log ("Control from Part pressed")
 			}
+			
+			GUILayout.BeginHorizontal();
+			GUILayout.EndHorizontal();
 
 			if (GUILayout.Button ("Close Window")) {
 				consoleGUI.hide ();
