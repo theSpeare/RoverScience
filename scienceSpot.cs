@@ -34,15 +34,15 @@ namespace RoverScience
 				return;
 			} 
 
-			if (rand.Next (0, 100) < 12) {
+			if (rand.Next (0, 100) < 19) {
 				potentialString = getNamePotential (potential.high);
 				potentialScience = rand.Next (400, 1000);
 				return;
 			} 
 
-			if (rand.Next (0, 100) < 40) {
+			if (rand.Next (0, 100) < 45) {
 				potentialString = getNamePotential (potential.normal);
-				potentialScience = rand.Next (200, 400);
+				potentialScience = rand.Next (300, 400);
 				return;
 			} 
 

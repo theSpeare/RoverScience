@@ -19,20 +19,27 @@ namespace RoverScience
 			}
 		}
 
+		private bool analyzeButtonPressedOnce = false;
+
 		private void drawRoverConsoleGUI (int windowID)
 		{
 
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 
-
 			if (!rover.scienceSpot.established) {
 				// PRINT OUT CONSOLE CONTENTS
-				foreach (string line in consolePrintOut) {
-					GUILayout.Label (line);
+				if (_roverScience.allowAnalyze) {
+					GUILayout.Label ("Searching for science spot . . .");
+					foreach (string line in consolePrintOut) {
+						GUILayout.Label (line);
+					}
+				} else {
+					GUILayout.Label ("Must wait until next analysis can be made");
+					GUILayout.Label ("Time Remaining (d): " + Math.Round(TimeSpan.FromSeconds(_roverScience.timeRemainingDelay).TotalDays, 1) + " days");
 				}
-			} else {
 
+			} else {
 				if (!rover.scienceSpotReached) {
 					double relativeBearing = rover.heading - rover.bearingToScienceSpot;
 					GUILayout.Label ("[POTENTIAL SCIENCE SPOT]");
@@ -55,6 +62,10 @@ namespace RoverScience
 					GUILayout.Label ("Distance from landing site: " + 
 						rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSite.location));
 					GUILayout.Label ("Potential: " + sciValues.potentialString);
+
+					GUILayout.Label ("");
+
+					GUILayout.Label ("WARNING: BY ANALYZING THIS SITE THE ROVER CANNOT ANALYZE FOR ANOTHER 30 KERBAL DAYS");
 				}
 
 			}
@@ -63,24 +74,46 @@ namespace RoverScience
 			GUILayout.EndVertical ();
 			
 			// ACTIVATE ROVER BUTTON
-			
-			if (GUILayout.Button ("Analyze Science")) {
-				_roverScience.analyzeScienceSample ();
+			if (!analyzeButtonPressedOnce) {
+				if (GUILayout.Button ("Analyze Science")) {
+					if ((_roverScience.allowAnalyze) && (rover.scienceSpotReached)) {
+						analyzeButtonPressedOnce = true;
+						consolePrintOut.Clear ();
+
+					}
+				}
+			} else {
+				GUILayout.BeginHorizontal ();
+				if (GUILayout.Button ("Cancel")) {
+					analyzeButtonPressedOnce = false;
+				}
+
+				if (GUILayout.Button ("Confirm")) {
+					analyzeButtonPressedOnce = false;
+					_roverScience.analyzeScienceSample ();
+				}
+				GUILayout.EndHorizontal ();
 			}
 
 			if (GUILayout.Button ("Reset Science Site")) {
 				rover.scienceSpot.established = false;
+				rover.resetDistanceTravelled ();
+				consolePrintOut.Clear ();
+
 			}
 			
 			if (GUILayout.Button ("Control from Part")) {
-				//_roverScience.command.SetReference();
-				Debug.Log ("Control from Part pressed")
+				_roverScience.command.MakeReference ();
 			}
 			
 			GUILayout.BeginHorizontal();
 			GUILayout.EndHorizontal();
 
-			if (GUILayout.Button ("Close Window")) {
+			if (GUILayout.Button ("Close and Shutdown")) {
+				rover.scienceSpot.established = false;
+				rover.resetDistanceTravelled ();
+				consolePrintOut.Clear ();
+
 				consoleGUI.hide ();
 			}
 

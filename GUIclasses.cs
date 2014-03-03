@@ -14,7 +14,7 @@ namespace RoverScience
 		{
 			public Rect rect = new Rect ();
 
-			public bool isOpen = true;
+			public bool isOpen = false;
 
 			public void show()
 			{

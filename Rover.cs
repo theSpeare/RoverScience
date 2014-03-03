@@ -145,7 +145,7 @@ namespace RoverScience
 		public void setScienceSpotLocation()
 		{
 			int minRadius = 25;
-			int maxRadius = 100;
+			int maxRadius = 70;
 
 			randomRadius = rand.Next (minRadius, maxRadius);
 

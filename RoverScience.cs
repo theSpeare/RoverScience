@@ -25,10 +25,6 @@ namespace RoverScience
 		RoverScienceGUI RoverScienceGUIM = new RoverScienceGUI ();
 
 
-
-		double oldMET = (double)0;
-		double delMET = (double)0;
-
 		Vessel vessel
 		{
 			get {
@@ -41,10 +37,37 @@ namespace RoverScience
 
 		}
 
-		//[KSPField(guiActive = true, guiName = "Distance Travelled", isPersistant = true, guiUnits = "m")]
-		//double disp_distanceTravelled;
+		[KSPField(isPersistant = true)]
+		public double analyzeDelayCheck;
 
-		[KSPEvent(guiActive = true, guiName = "Open Rover Terminal")]
+		public bool allowAnalyze
+		{
+			get{
+
+				if ((FlightGlobals.ActiveVessel.missionTime - analyzeDelayCheck) > (TimeSpan.FromDays(30).TotalSeconds)) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+
+		public double delayDifference 
+		{
+			get{
+				return (FlightGlobals.ActiveVessel.missionTime - analyzeDelayCheck);
+			}
+		}
+
+		public double timeRemainingDelay
+		{
+			get{
+				return (TimeSpan.FromDays (30).TotalSeconds - delayDifference);
+			}
+
+		}
+
+		[KSPEvent(guiActive = true, guiName = "Activate Rover Terminal")]
 		private void showGUI()
 		{
 			RoverScienceGUIM.consoleGUI.toggle ();
@@ -69,19 +92,27 @@ namespace RoverScience
 		{
 			Debug.Log ("RoverScience OnDestroy()");
 		}
+			
 
 		public override void OnLoad(ConfigNode vesselNode)
 		{
-			// GUI position still not saved - could be IsPrimary causing problems
-			if (IsPrimary) {
-				Debug.Log ("OnLoad()");
-				// Load distance travelled by rover
-				rover.distanceTravelled = Convert.ToDouble (vesselNode.GetValue ("disp_distanceTravelled"));
-
-				// Load GUI window position for vessel
-				//RoverScienceGUIM.pos_x = (float)Convert.ToDouble (vesselNode.GetValue ("RoverScienceGUI_x"));
-				//RoverScienceGUIM.pos_y = (float)Convert.ToDouble (vesselNode.GetValue ("RoverScienceGUI_y"));
+			try
+			{
+				if ((HighLogic.LoadedSceneIsFlight) && (FlightGlobals.ActiveVessel != null)) {
+					if (vesselNode.HasValue ("analyzeDelayCheck")) {
+						analyzeDelayCheck = Convert.ToDouble (vesselNode.GetValue ("analyzeDelayCheck"));
+						Debug.Log ("Loaded GetValue: " + vesselNode.GetValue ("analyzeDelayCheck"));
+						Debug.Log ("Loaded analyzeDelayCheck: " + analyzeDelayCheck);
+					} else {
+						analyzeDelayCheck = ((FlightGlobals.ActiveVessel.missionTime) - (TimeSpan.FromDays (30).TotalSeconds));
+						Debug.Log ("No node found for analyzeDelayCheck");
+						Debug.Log ("analyzeDelayCheck is now: " + analyzeDelayCheck);
+					}
+				}
 			}
+			catch{
+			}
+
 		}
 
 		public override void OnStart(PartModule.StartState state)
@@ -89,15 +120,11 @@ namespace RoverScience
 			if (!HighLogic.LoadedSceneIsFlight) {
 				return;
 			}
-			//if (HighLogic.LoadedSceneIsFlight)
+
 			if (IsPrimary) {
 				Debug.Log ("RoverScience 2 initiated!");
 
 				Instance = this;
-				//setFieldDisplays ();
-
-				delMET = (double)0;
-				oldMET = vessel.missionTime;
 
 				container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
 				command = part.Modules["ModuleCommand"] as ModuleCommand;
@@ -115,30 +142,29 @@ namespace RoverScience
 			if (IsPrimary) {
 				// check if the rover fits conditions
 				// set delMET for distance calculations with horizontal surface speed.
-				ModuleScienceContainer container = this.container;
 
-				if (checkRoverValidStatus()) timeKeeper ();
+				if (RoverScienceGUIM.consoleGUI.isOpen) {
 
-				// rover stuff
+					if (checkRoverValidStatus()) rover.calculateDistanceTravelled (TimeWarp.deltaTime);
 
-				rover.setLandingSpot ();
-				if (rover.landingSite.established) rover.setRoverLocation ();
-				if ((!rover.scienceSpot.established) && (!rover.scienceSpotReached)) checkAndSetScienceSpot ();
 
+					// rover stuff
+
+					rover.setLandingSpot ();
+					if (rover.landingSite.established)
+						rover.setRoverLocation ();
+					if ((!rover.scienceSpot.established) && (!rover.scienceSpotReached))
+						checkAndSetScienceSpot ();
+				}
 			}
+
 
 			DebugKey ();
 		}
 
 
-
-		private void timeKeeper()
-		{
-				delMET = (vessel.missionTime - oldMET);
-				rover.calculateDistanceTravelled (delMET);
-				oldMET = vessel.missionTime;
-		}
-
+		// Much credit to a.g. as his source helped to figure out how to utilize the experiment and its data
+		// https://github.com/angavrilov/ksp-surface-survey/blob/master/SurfaceSurvey.cs#L276
 		public void analyzeScienceSample()
 		{
 			if (rover.scienceSpotReached) {
@@ -155,8 +181,11 @@ namespace RoverScience
 
 
 				StoreScience (container, sciSubject, sciData);
+				container.ReviewData ();
 
 				Debug.Log ("Science retrieved! - " + rover.scienceSpot.potentialScience);
+
+				analyzeDelayCheck = FlightGlobals.ActiveVessel.missionTime;
 			} else {
 				Debug.Log ("Tried to analyze while not at spot?");
 			}
@@ -169,7 +198,7 @@ namespace RoverScience
 			if (container.capacity > 0 && container.GetScienceCount() >= container.capacity)
 				return false;
 				
-			float xmitValue = 1.0f;
+			float xmitValue = 0.6f;
 			float labBoost = 0.2f;
 
 			var new_data = new ScienceData(data, xmitValue, labBoost, subject.id, subject.title);
@@ -232,8 +261,11 @@ namespace RoverScience
 
 		public void DebugKey()
 		{
-			if (Input.GetKeyDown (KeyCode.Equals)) {
-				RoverScienceGUIM.debugGUI.show ();
+			if (HighLogic.LoadedSceneIsFlight) {
+				if (Input.GetKey (KeyCode.RightControl) && Input.GetKey (KeyCode.Keypad5))
+				{
+					RoverScienceGUIM.debugGUI.show ();
+				}
 			}
 		}
 

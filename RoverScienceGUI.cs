@@ -57,18 +57,13 @@ namespace RoverScience
 
 		public void drawGUI()
 		{
-
 				if (consoleGUI.isOpen) {
 					consoleGUI.rect = GUILayout.Window (25639814, consoleGUI.rect, drawRoverConsoleGUI, "Rover Terminal");
 				}
 
-
 				if (debugGUI.isOpen) {
 				debugGUI.rect = GUILayout.Window (9358921, debugGUI.rect, drawDebugGUI, "Debug");
 				}
-
-
-		
 		}
 
 		public void addToConsole (string line)

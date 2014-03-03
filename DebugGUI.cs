@@ -39,50 +39,15 @@ namespace RoverScience
 				rover.scienceSpot.established = true;
 			}
 
+			if (GUILayout.Button ("Skip Analysis Delay")) {
+				_roverScience.analyzeDelayCheck = ((FlightGlobals.ActiveVessel.missionTime) - (TimeSpan.FromDays (30).TotalSeconds));
+			}
+
 			if (GUILayout.Button ("CLEAR CONSOLE")) {
 				consolePrintOut.Clear ();
 			}
 
-			toEdit = GUILayout.TextField(toEdit, GUILayout.MinWidth(30.0F));
-
 			GUILayout.BeginHorizontal ();
-
-			for (int i = 0; i < (buttonPressed.Length - 1); i++) {
-				if (GUILayout.Button (i.ToString ())) {
-					for (int y = 0; y < (buttonPressed.Length - 1); y++) {
-						buttonPressed [y] = false;
-					}
-					buttonPressed [i] = true;
-				}
-			}
-
-			if (GUILayout.Button ("S")) {
-
-				switch (buttonPressedI) {
-				case 0:
-					buttonZero ();
-					break;
-				case 1:
-					buttonOne ();
-					break;
-				case 2:
-					buttonTwo ();
-					break;
-				case 3:
-					buttonThree ();
-					break;
-				case 4:
-					buttonFour ();
-					break;
-				case 5:
-					buttonFive ();
-					break;
-				default:
-					break;
-				}
-
-				Debug.Log ("buttonPressed is: " + buttonPressedI);
-			}
 
 			GUILayout.EndHorizontal ();
 
@@ -93,36 +58,6 @@ namespace RoverScience
 			GUILayout.EndVertical ();
 
 			GUI.DragWindow ();
-		}
-
-		private void buttonZero()
-		{
-			//_roverScience.subjectScience = (float)Convert.ToDouble(toEdit);
-		}
-
-		private void buttonOne()
-		{
-			//	_roverScience.scienceCap = (float)Convert.ToDouble(toEdit);
-		}
-
-		private void buttonTwo()
-		{
-			//_roverScience.dataScale = (float)Convert.ToDouble(toEdit);
-		}
-
-		private void buttonThree()
-		{
-			//_roverScience.scientificValue = (float)Convert.ToDouble(toEdit);
-		}
-
-		private void buttonFour()
-		{
-			//_roverScience.sciData = (float)Convert.ToDouble(toEdit);
-		}
-
-		private void buttonFive()
-		{
-			//_roverScience.subjectValue = (float)Convert.ToDouble(toEdit);
 		}
 	}
 }
