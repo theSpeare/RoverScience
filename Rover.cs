@@ -21,35 +21,39 @@ namespace RoverScience
 	{
 
 		public System.Random rand = new System.Random();
-		public ScienceSpot scienceSpot = new ScienceSpot();
-		public LandingSpot landingSpot = new LandingSpot();
+
+		public ScienceSpot scienceSpot;
+		public LandingSpot landingSpot;
 
 		public COORDS location = new COORDS ();
-
 		public double distanceTravelled = 0;
 		public double distanceCheck = 20;
 		public double distanceTravelledTotal = 0;
+      
 
-        public Navigation navigation;
+		public Rover()
+		{
+			Debug.Log ("ROVER HERE!");
+		}
 
 		public double distanceFromLandingSite
 		{
 			get{
-				return navigation.getDistanceBetweenTwoPoints (location, landingSpot.location);
+				return getDistanceBetweenTwoPoints (location, landingSpot.location);
 			}
 		}
 
 		public double distanceFromScienceSpot
 		{
 			get{
-                return navigation.getDistanceBetweenTwoPoints(location, scienceSpot.location);
+                return getDistanceBetweenTwoPoints(location, scienceSpot.location);
 			}
 		}
 
 		public double bearingToScienceSpot
 		{
 			get {
-                return navigation.getBearingFromCoords(scienceSpot.location);
+                return getBearingFromCoords(scienceSpot.location);
 			}
 		}
 
@@ -91,11 +95,10 @@ namespace RoverScience
 		}
 
 
-		public void calculateDistanceTravelled(double delMET)
+		public void calculateDistanceTravelled(double deltaTime)
 		{
-			distanceTravelled += (RoverScience.Instance.vessel.srfSpeed) * delMET;
-            if (!landingSpot.established) distanceTravelledTotal += distanceTravelled;
-
+			distanceTravelled += (RoverScience.Instance.vessel.srfSpeed) * deltaTime;
+			if (!scienceSpot.established) distanceTravelledTotal += (RoverScience.Instance.vessel.srfSpeed) * deltaTime;
 		}
 
         public bool checkRoverValidStatus()
@@ -110,6 +113,44 @@ namespace RoverScience
             location.latitude = FlightGlobals.ActiveVessel.latitude;
             location.longitude = FlightGlobals.ActiveVessel.longitude;
         }
+
+		public double getDistanceBetweenTwoPoints(COORDS _from, COORDS _to)
+		{
+
+			double bodyRadius = FlightGlobals.ActiveVessel.mainBody.Radius;
+			double dLat = (_to.latitude - _from.latitude).ToRadians();
+			double dLon = (_to.longitude - _from.longitude).ToRadians();
+			double lat1 = _from.latitude.ToRadians();
+			double lat2 = _to.latitude.ToRadians();
+
+			double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+				Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+			double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+			double d = bodyRadius * c;
+
+			return Math.Round(d, 4);
+		}
+
+
+		public double getBearingFromCoords(COORDS target)
+		{
+			// Rover x,y position
+
+			double dLat = (target.latitude - location.latitude).ToRadians();
+			double dLon = (target.longitude - location.longitude).ToRadians();
+			double lat1 = location.latitude.ToRadians();
+			double lat2 = target.latitude.ToRadians();
+
+			double y = Math.Sin(dLon) * Math.Cos(lat2);
+			double x = Math.Cos(lat1) * Math.Sin(lat2) -
+				Math.Sin(lat1) * Math.Cos(lat2) * Math.Cos(dLon);
+
+			double bearing = Math.Atan2(y, x).ToDegrees();
+			//bearing = (bearing + 180) % 360;
+
+			//return bearing % 360;
+			return (bearing + 360) % 360;
+		}
 
 		public void resetDistanceTravelled()
 		{

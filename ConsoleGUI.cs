@@ -30,7 +30,7 @@ namespace RoverScience
 				// PRINT OUT CONSOLE CONTENTS
 				if (_roverScience.allowAnalyze) {
 					GUILayout.Label ("Searching for science spot . . .");
-                    GUILayout.Label ("Total distance travelled searching: ");
+					GUILayout.Label ("Total dist. travelled searching: " + Math.Round(rover.distanceTravelledTotal, 2));
 					foreach (string line in consolePrintOut) {
 						GUILayout.Label (line);
 					}
@@ -55,13 +55,11 @@ namespace RoverScience
 					}
 
 				} else {
-					ScienceSpot sciValues = rover.scienceSpot.getValues ();
-
 					GUILayout.Label ("[SCIENCE SPOT REACHED]");
 					GUILayout.Label ("Total dist. travelled for this spot: " + rover.distanceTravelledTotal);
 					GUILayout.Label ("Distance from landing site: " +
-                        rover.navigation.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location));
-					GUILayout.Label ("Potential: " + sciValues.potentialString);
+                        rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location));
+					GUILayout.Label ("Potential: " + rover.scienceSpot.potentialString);
 
 					GUILayout.Label ("");
 

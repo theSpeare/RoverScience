@@ -20,8 +20,9 @@ namespace RoverScience
 		public ModuleScienceContainer container;
 		public ModuleCommand command;
 		public double distCounter;
-		public Rover rover = new Rover ();
+		public Rover rover;
 		public RoverScienceGUI roverScienceGUI = new RoverScienceGUI ();
+
 
         [KSPField(isPersistant = true)]
         public double analyzeDelayCheck;
@@ -64,6 +65,13 @@ namespace RoverScience
 				return (TimeSpan.FromDays (30).TotalSeconds - delayDifference);
 			}
 
+		}
+
+		public float bodyScienceScalar
+		{
+			get{
+				return getBodyScienceScalar ();
+			}
 		}
 
 		[KSPEvent(guiActive = true, guiName = "Activate Rover Terminal")]
@@ -121,12 +129,20 @@ namespace RoverScience
                     Debug.Log("RoverScience 2 initiated!");
                     Debug.Log("RoverScience version: " + RSVersion);
 
+
                     Instance = this;
+					Debug.Log ("RS Instance set - " + Instance);
+
 
                     container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
                     command = part.Modules["ModuleCommand"] as ModuleCommand;
 
                     RenderingManager.AddToPostDrawQueue(0, roverScienceGUI.drawGUI);
+
+					// Must be called here otherwise they won't run their constructors for some reason
+					rover = new Rover ();
+					rover.scienceSpot = new ScienceSpot (Instance);
+					rover.landingSpot = new LandingSpot (Instance);
                 }
                 else
                 {
@@ -145,12 +161,10 @@ namespace RoverScience
                     // Calculate rover travelled distance
 					if (rover.checkRoverValidStatus()) rover.calculateDistanceTravelled (TimeWarp.deltaTime);
 
-                    // Rover setting of landingSpot and scienceSpot
-                    rover.landingSpot.setSpot();
-					if (rover.landingSpot.established)
-						rover.setRoverLocation ();
-                    if ((!rover.scienceSpot.established) && (!rover.scienceSpotReached))
-                        rover.scienceSpot.checkAndSet();
+					rover.landingSpot.setSpot();
+					if (rover.landingSpot.established) rover.setRoverLocation ();
+					if ((!rover.scienceSpot.established) && (!rover.scienceSpotReached)) rover.scienceSpot.checkAndSet ();
+					
 				}
 			}
 
@@ -164,24 +178,25 @@ namespace RoverScience
 		public void analyzeScienceSample()
 		{
 			if (rover.scienceSpotReached) {
-				ScienceSpot sciValues = new ScienceSpot ();
-				sciValues = rover.scienceSpot.getValues ();
-				rover.scienceSpot.reset ();
+				//ScienceSpot sciValues = new ScienceSpot ();
+				//sciValues = rover.scienceSpot.getValues ();
+
 
 				ScienceExperiment sciExperiment = ResearchAndDevelopment.GetExperiment("RoverScienceExperiment");
 				ScienceSubject sciSubject = ResearchAndDevelopment.GetExperimentSubject (sciExperiment, ExperimentSituations.SrfLanded, vessel.mainBody, "");
 
 				sciSubject.subjectValue = 1;
 				sciSubject.scienceCap = 2000;
-				float sciData = sciValues.potentialScience;
-
+				float sciData = rover.scienceSpot.potentialScience;
+				Debug.Log ("rover.scienceSpot.potentialScience: " + rover.scienceSpot.potentialScience);
 
 				StoreScience (container, sciSubject, sciData);
 				container.ReviewData ();
 
-				Debug.Log ("Science retrieved! - " + rover.scienceSpot.potentialScience);
+				Debug.Log ("Science retrieved! - " + sciData);
 
 				analyzeDelayCheck = FlightGlobals.ActiveVessel.missionTime;
+				rover.scienceSpot.reset ();
 			} else {
 				Debug.Log ("Tried to analyze while not at spot?");
 			}
@@ -194,10 +209,10 @@ namespace RoverScience
 			if (container.capacity > 0 && container.GetScienceCount() >= container.capacity)
 				return false;
 				
-			float xmitValue = 0.6f;
+			float xmitValue = 0.7f;
 			float labBoost = 0.2f;
 
-			var new_data = new ScienceData(data, xmitValue, labBoost, subject.id, subject.title);
+			ScienceData new_data = new ScienceData(data, xmitValue, labBoost, subject.id, subject.title);
 
 			if (container.AddData (new_data))
 				return true;
@@ -206,7 +221,24 @@ namespace RoverScience
 			return false;
 		}
 
+		public float getBodyScienceScalar ()
+		{
+			string currentBodyName = FlightGlobals.ActiveVessel.mainBody.bodyName;
 
+			switch (currentBodyName) {
+			case "Kerbin":
+				return 0.1f;
+			case "Sun":
+				return 0;
+			case "Mun":
+				return 0.7f;
+			case "Minmus":
+				return 0.60f;
+			default:
+				return 1;
+
+			}
+		}
 		
 
 

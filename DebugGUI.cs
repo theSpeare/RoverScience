@@ -8,9 +8,6 @@ namespace RoverScience
 {
 	public partial class RoverScienceGUI
 	{
-		public string toEdit = "empty";
-
-
 		private void drawDebugGUI (int windowID)
 		{
 
@@ -20,10 +17,32 @@ namespace RoverScience
 			}
 				
 			if (GUILayout.Button ("Cheat Spot Here")) {
-				rover.scienceSpot.location.latitude = rover.location.latitude;
-				rover.scienceSpot.location.longitude = rover.location.longitude;
+				if ((!rover.scienceSpot.established) && (consoleGUI.isOpen)) {
+					rover.scienceSpot.location.latitude = FlightGlobals.ActiveVessel.latitude;
+					rover.scienceSpot.location.longitude = FlightGlobals.ActiveVessel.longitude;
 
-				rover.scienceSpot.established = true;
+					rover.scienceSpot.established = true;
+				}
+			}
+
+			if (GUILayout.Button ("Print Rover class")) {
+				Debug.Log (rover);
+			}
+
+			if (GUILayout.Button ("Print RoverScience class")) {
+				Debug.Log (_roverScience);
+			}
+
+			if (GUILayout.Button ("Print 1")) {
+				Debug.Log (rover.distanceTravelled);
+			}
+
+			if (GUILayout.Button ("Print 2")) {
+				Debug.Log (rover.scienceSpot);
+			}
+
+			if (GUILayout.Button ("Print 3")) {
+				Debug.Log (rover.scienceSpot.established);
 			}
 
 			if (GUILayout.Button ("Skip Analysis Delay")) {

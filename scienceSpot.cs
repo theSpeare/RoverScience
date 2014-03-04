@@ -10,65 +10,64 @@ namespace RoverScience
 
 	public class ScienceSpot
 	{
+
 		System.Random rand = new System.Random();
 		public COORDS location = new COORDS ();
 
-		public int potentialScience = 0;
+		public int potentialScience;
         public int randomRadius = 0;
 
 		public string potentialString;
 		public bool established = false;
-       
+		RoverScience roverScience = null;
 
-        public RoverScienceGUI roverScienceGUI
-        {
-            get
-            {
-                return RoverScience.Instance.roverScienceGUI;
-            }
-        }
-
-        public Rover rover
-        {
-            get
-            {
-                return RoverScience.Instance.rover;
-            }
-        }
-
-		public ScienceSpot getValues()
+		public ScienceSpot (RoverScience roverScience)
 		{
-			ScienceSpot sciSpot = new ScienceSpot ();
+				this.roverScience = roverScience;
+		}
 
-			sciSpot.potentialScience = potentialScience;
-			sciSpot.potentialString = potentialString;
+		public Rover rover {
+			get {
+				return roverScience.rover;
+			}
+		}
 
-			return sciSpot;
+		public RoverScienceGUI roverScienceGUI
+		{
+			get
+			{
+				return roverScience.roverScienceGUI;
+			}
 		}
 
 		public void generateScience()
 		{
+			Debug.Log ("generateScience()");
 			if (rand.Next (0, 100) < 2) {
 				potentialString = getNamePotential (potential.vhigh);
 				potentialScience = rand.Next (1000, 2000);
+				Debug.Log ("vhigh");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 19) {
 				potentialString = getNamePotential (potential.high);
 				potentialScience = rand.Next (400, 1000);
+				Debug.Log ("high");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 45) {
 				potentialString = getNamePotential (potential.normal);
 				potentialScience = rand.Next (300, 400);
+				Debug.Log ("normal");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 70) {
 				potentialString = getNamePotential (potential.low);
 				potentialScience = rand.Next (20, 300);
+				Debug.Log ("low");
 				return;
 			}
 				
@@ -79,11 +78,13 @@ namespace RoverScience
 
         // This handles what happens after the distance travelled passes the distance roll
         // If the roll is successful establish a science spot
-        public void checkAndSet()
+		public void checkAndSet()
         {
             // Once distance travelled passes the random check distance
+
             if (rover.distanceTravelled >= rover.distanceCheck)
             {
+				
                 rover.resetDistanceTravelled();
 
                 roverScienceGUI.addRandomConsoleJunk();
@@ -92,35 +93,42 @@ namespace RoverScience
 
                 // Reroll distanceCheck value
                 rover.distanceCheck = rand.Next(20, 50);
-
+					
                 // farther you are from established site the higher the chance of striking science!
-                int rNum = rand.Next(0, 100);
-                double dist = rover.distanceFromLandingSite;
+
+			
+				int rNum = rand.Next(0, 100);
+				double dist = rover.distanceFromLandingSite;
                 double chanceAlgorithm = 0.75 * dist;
 
                 double chance = (chanceAlgorithm < 75) ? chanceAlgorithm : 75;
 
-                //Debug.Log ("rNum: " + rNum);
-                //Debug.Log ("chance: " + chance);
-
+                Debug.Log ("rNum: " + rNum);
+                Debug.Log ("chance: " + chance);
+				Debug.Log ("Yes? " + ((double)rNum <= chance));
+					
                 // rNum is a random number between 0 and 100
                 // chance is the percentage number we check for to determine a successful roll
                 // higher chance == higher success roll chance
                 if ((double)rNum <= chance)
                 {
+						
                     setLocation();
+					Debug.Log ("setLocation");
 
                     roverScienceGUI.clearConsole();
 
                     Debug.Log("Distance from spot is: " + rover.distanceFromScienceSpot);
                     Debug.Log("Bearing is: " + rover.bearingToScienceSpot);
                     Debug.Log("Something found");
+							
                 }
                 else
                 {
                     // Science hotspot not found
                     Debug.Log("Nothing found!");
                 }
+
 
             }
 
@@ -171,15 +179,20 @@ namespace RoverScience
 
             //Debug.Log ("spotLon: " + spotLon);
 
-            rover.scienceSpot.location.latitude = spotLat.ToDegrees();
-            rover.scienceSpot.location.longitude = spotLon.ToDegrees();
+            location.latitude = spotLat.ToDegrees();
+            location.longitude = spotLon.ToDegrees();
 
             //Debug.Log ("scienceSpot.location.latitude: " + scienceSpot.location.latitude);
             //Debug.Log ("scienceSpot.location.longitude: " + scienceSpot.location.longitude);
 
 
-            rover.scienceSpot.established = true;
-            rover.scienceSpot.generateScience();
+            established = true;
+
+			Debug.Log ("attempting to generateScience");
+            generateScience();
+			Debug.Log ("completed generatingScience?");
+			Debug.Log ("potentialScience after generate(): " + potentialScience);
+			Debug.Log ("potentialString after generate(): " + potentialString);
 
             rover.distanceTravelledTotal = 0;
 
@@ -214,15 +227,15 @@ namespace RoverScience
 			switch (p)
 			{
 			case potential.vlow:
-				return "Horrible - 1";
+				return "Very Low - 1";
 			case potential.low:
-				return "Alright - 2";
+				return "Low - 2";
 			case potential.normal:
 				return "Average - 3";
 			case potential.high:
 				return "High! - 4";
 			case potential.vhigh:
-				return "Amazing! - 5";
+				return "Very High! - 5";
 			default:
 				return null;
 			}
