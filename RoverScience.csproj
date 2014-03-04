@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -38,20 +38,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Navigation.cs" />
+    <Compile Include="LandingSpot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoverScience.cs" />
     <Compile Include="RoverScienceGUI.cs" />
     <Compile Include="Rover.cs" />
     <Compile Include="Extension Crap\KSPAddonFix.cs" />
     <Compile Include="Extension Crap\SkipThroughMainMenu.cs" />
-    <Compile Include="GUIclasses.cs" />
+    <Compile Include="GUIClasses.cs" />
     <Compile Include="RandomConsolePrints.cs" />
     <Compile Include="ConsoleGUI.cs" />
-    <Compile Include="scienceSpot.cs" />
+    <Compile Include="ScienceSpot.cs" />
     <Compile Include="DebugGUI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Extension Crap\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -21,36 +21,35 @@ namespace RoverScience
 	{
 
 		public System.Random rand = new System.Random();
-		public _ScienceSpot scienceSpot = new _ScienceSpot();
-		public _landSite landingSite = new _landSite();
+		public ScienceSpot scienceSpot = new ScienceSpot();
+		public LandingSpot landingSpot = new LandingSpot();
 
-		public Vector3d transferLocation = new Vector3d();
 		public COORDS location = new COORDS ();
 
 		public double distanceTravelled = 0;
 		public double distanceCheck = 20;
-		public double totalDistanceTravelled = 0;
+		public double distanceTravelledTotal = 0;
 
-		public int randomRadius = 0;
+        public Navigation navigation;
 
 		public double distanceFromLandingSite
 		{
 			get{
-				return getDistanceBetweenTwoPoints (location, landingSite.location);
+				return navigation.getDistanceBetweenTwoPoints (location, landingSpot.location);
 			}
 		}
 
 		public double distanceFromScienceSpot
 		{
 			get{
-				return getDistanceBetweenTwoPoints (location, scienceSpot.location);
+                return navigation.getDistanceBetweenTwoPoints(location, scienceSpot.location);
 			}
 		}
 
 		public double bearingToScienceSpot
 		{
 			get {
-				return getBearingFromCoords (scienceSpot.location);
+                return navigation.getBearingFromCoords(scienceSpot.location);
 			}
 		}
 
@@ -81,6 +80,8 @@ namespace RoverScience
 
 		}
 
+        
+
 		public int numberWheelsLanded
 		{
 			get
@@ -93,149 +94,22 @@ namespace RoverScience
 		public void calculateDistanceTravelled(double delMET)
 		{
 			distanceTravelled += (RoverScience.Instance.vessel.srfSpeed) * delMET;
-		}
-
-		public double getDistanceBetweenTwoPoints(COORDS _from, COORDS _to)
-		{
-
-			double bodyRadius = FlightGlobals.ActiveVessel.mainBody.Radius;
-			double dLat = (_to.latitude - _from.latitude).ToRadians ();
-			double dLon = (_to.longitude - _from.longitude).ToRadians ();
-			double lat1 = _from.latitude.ToRadians ();
-			double lat2 = _to.latitude.ToRadians ();
-
-			double a = Math.Sin(dLat/2) * Math.Sin(dLat/2) +
-				Math.Sin(dLon/2) * Math.Sin(dLon/2) * Math.Cos(lat1) * Math.Cos(lat2); 
-			double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1-a)); 
-			double d = bodyRadius * c;
-
-			return Math.Round(d, 4);
-		}
-
-
-		public double getBearingFromCoords (COORDS target)
-		{
-			// Rover x,y position
-
-			double dLat = (target.latitude - location.latitude).ToRadians ();
-			double dLon = (target.longitude - location.longitude).ToRadians ();
-			double lat1 = location.latitude.ToRadians ();
-			double lat2 = target.latitude.ToRadians ();
-
-			double y = Math.Sin(dLon) * Math.Cos(lat2);
-			double x = Math.Cos(lat1)*Math.Sin(lat2) -
-				Math.Sin(lat1)*Math.Cos(lat2)*Math.Cos(dLon);
-
-			double bearing = Math.Atan2(y, x).ToDegrees();
-			//bearing = (bearing + 180) % 360;
-
-			//return bearing % 360;
-			return (bearing + 360) % 360;
-		}
-
-
-		// set current rover location
-		public void setRoverLocation()
-		{
-			location.latitude = FlightGlobals.ActiveVessel.latitude;
-			location.longitude = FlightGlobals.ActiveVessel.longitude;
-		}
-
-		// set found science spot
-		public void setScienceSpotLocation()
-		{
-			int minRadius = 25;
-			int maxRadius = 70;
-
-			randomRadius = rand.Next (minRadius, maxRadius);
-
-			double bodyRadius = FlightGlobals.ActiveVessel.mainBody.Radius;
-			Debug.Log (FlightGlobals.ActiveVessel.mainBody.Radius.ToString ());
-
-			double randomAngle = rand.NextDouble () * (double)(1.9);
-			double randomTheta = (randomAngle*(Math.PI));
-
-			double angularDistance = randomRadius/bodyRadius;
-
-			Debug.Log ("angularDistance " + angularDistance);
-			Debug.Log ("Math.Cos(angularDistance) " + Math.Cos (angularDistance));
-			Debug.Log ("randomRadius: " + randomRadius);
-			Debug.Log ("bodyRadius: " + bodyRadius);
-
-
-
-			double currentLatitude = FlightGlobals.ActiveVessel.latitude.ToRadians ();
-			double currentLongitude = FlightGlobals.ActiveVessel.longitude.ToRadians ();
-
-			Debug.Log ("currentLatitude: " + currentLatitude);
-			Debug.Log ("currentLongitude: " + currentLongitude);
-
-			double spotLat = Math.Asin( Math.Sin(currentLatitude)*Math.Cos(angularDistance) + 
-				Math.Cos(currentLatitude)*Math.Sin(angularDistance)*Math.Cos(randomTheta));
-
-			Debug.Log ("Math.Sin(currentLatitude) " + Math.Sin (currentLatitude));
-
-			Debug.Log ("Math.Cos(randomTheta) " + Math.Cos (randomTheta));
-			Debug.Log ("Math.Sin(currentLatitude)*Math.Cos(angularDistance) " + (Math.Sin (currentLatitude) * Math.Cos (angularDistance)));
-			Debug.Log ("Math.Cos(currentLatitude)*Math.Sin(angularDistance)*Math.Cos(randomTheta) " + (Math.Cos (currentLatitude) * Math.Sin (angularDistance) * Math.Cos (randomTheta)));
-
-			Debug.Log ("spotLat: " + spotLat);
-
-			double spotLon = currentLongitude + Math.Atan2(Math.Sin(randomTheta)*Math.Sin(angularDistance)*Math.Cos(currentLatitude), 
-				Math.Cos(angularDistance)-Math.Sin(currentLatitude)*Math.Sin(spotLat));
-
-			Debug.Log ("spotLon: " + spotLon);
-
-			scienceSpot.location.latitude = spotLat.ToDegrees ();
-			scienceSpot.location.longitude = spotLon.ToDegrees ();
-
-			Debug.Log ("scienceSpot.location.latitude: " + scienceSpot.location.latitude);
-			Debug.Log ("scienceSpot.location.longitude: " + scienceSpot.location.longitude);
-
-
-			scienceSpot.established = true;
-			scienceSpot.generateScience ();
-
-
-			Debug.Log ("randomRadius selected: " + randomRadius);
-			Debug.Log ("randomAngle: " + Math.Round(randomAngle, 4));
-			Debug.Log ("random_theta (radians): " + Math.Round(randomTheta, 4));
-			Debug.Log ("random_theta (degrees?): " + Math.Round((randomTheta.ToDegrees()), 4));
-			Debug.Log ("distance to scienceSpot: " + distanceFromScienceSpot);
-		}
-
-
-
-		public void setLandingSpot()
-		{
-			// check if LandingSpot has already been established
-			if (!landingSite.established) {
-				// SET LANDING SITE
-				if (numberWheelsLanded > 0) {
-					// set x by y position
-					landingSite.location.longitude = FlightGlobals.ActiveVessel.longitude;
-					landingSite.location.latitude = FlightGlobals.ActiveVessel.latitude;
-
-					resetDistanceTravelled ();
-
-					landingSite.established = true;
-					Debug.Log ("Landing site has been established!");
-				}
-			} else {
-				// RESET LANDING SITE
-				if ((numberWheelsLanded == 0) && (FlightGlobals.ActiveVessel.heightFromTerrain > 10)) {
-
-					//reset landSiteCoords to arbitrary numbers
-					landingSite.location.latitude = 0;
-					landingSite.location.longitude = 0;
-					landingSite.established = false;
-					Debug.Log ("Landing site reset!");
-
-					resetDistanceTravelled ();
-				}
-			}
+            if (!landingSpot.established) distanceTravelledTotal += distanceTravelled;
 
 		}
+
+        public bool checkRoverValidStatus()
+        {
+            // Checks if rover is landed with at least one wheel on no time-warp.
+            return ((TimeWarp.CurrentRate == 1) && (vessel.horizontalSrfSpeed > (double)0.01) && (numberWheelsLanded > 0));
+        }
+
+        // set current rover location
+        public void setRoverLocation()
+        {
+            location.latitude = FlightGlobals.ActiveVessel.latitude;
+            location.longitude = FlightGlobals.ActiveVessel.longitude;
+        }
 
 		public void resetDistanceTravelled()
 		{

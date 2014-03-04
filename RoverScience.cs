@@ -11,20 +11,23 @@ namespace RoverScience
 
 	public class RoverScience : PartModule
 	{
-	
+
+        // Not necessarily updated per build. Mostly updated per major commits
+        public readonly string RSVersion = "ALPHA - Build 1";
+
 		public static RoverScience Instance = null;
-
 		public System.Random rand = new System.Random();
-
 		public ModuleScienceContainer container;
 		public ModuleCommand command;
-		
 		public double distCounter;
-
 		public Rover rover = new Rover ();
-		RoverScienceGUI RoverScienceGUIM = new RoverScienceGUI ();
+		public RoverScienceGUI roverScienceGUI = new RoverScienceGUI ();
 
+        [KSPField(isPersistant = true)]
+        public double analyzeDelayCheck;
 
+        // Leave this alone. PartModule has its own vessel class which SHOULD do the job but
+        // for some reason removing this seemed to destroy a lot of function
 		Vessel vessel
 		{
 			get {
@@ -37,13 +40,9 @@ namespace RoverScience
 
 		}
 
-		[KSPField(isPersistant = true)]
-		public double analyzeDelayCheck;
-
 		public bool allowAnalyze
 		{
 			get{
-
 				if ((FlightGlobals.ActiveVessel.missionTime - analyzeDelayCheck) > (TimeSpan.FromDays(30).TotalSeconds)) {
 					return true;
 				} else {
@@ -70,14 +69,12 @@ namespace RoverScience
 		[KSPEvent(guiActive = true, guiName = "Activate Rover Terminal")]
 		private void showGUI()
 		{
-			RoverScienceGUIM.consoleGUI.toggle ();
+			roverScienceGUI.consoleGUI.toggle ();
 		}
 
-		//ActionGroupThing
-		[KSPAction("Toggle showGUI", actionGroup = KSPActionGroup.None)]
+		[KSPAction("Activate Console", actionGroup = KSPActionGroup.None)]
 		private void showGUIAction(KSPActionParam param)
 		{
-			Debug.Log ("showGUIAction");
 			if (IsPrimary) showGUI ();
 		}
 
@@ -117,48 +114,47 @@ namespace RoverScience
 
 		public override void OnStart(PartModule.StartState state)
 		{
-			if (!HighLogic.LoadedSceneIsFlight) {
-				return;
-			}
+            if (HighLogic.LoadedSceneIsFlight)
+            {
+                if (IsPrimary)
+                {
+                    Debug.Log("RoverScience 2 initiated!");
+                    Debug.Log("RoverScience version: " + RSVersion);
 
-			if (IsPrimary) {
-				Debug.Log ("RoverScience 2 initiated!");
+                    Instance = this;
 
-				Instance = this;
+                    container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
+                    command = part.Modules["ModuleCommand"] as ModuleCommand;
 
-				container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
-				command = part.Modules["ModuleCommand"] as ModuleCommand;
-				
-				RenderingManager.AddToPostDrawQueue (0, RoverScienceGUIM.drawGUI);
-			} else {
-				// For when a duplicate PartModule is found
-				Debug.Log ("Not primary");
-			}
+                    RenderingManager.AddToPostDrawQueue(0, roverScienceGUI.drawGUI);
+                }
+                else
+                {
+                    Debug.Log("ONSTART - Not primary");
+                }
+            }
 
 		}
 		
 		public override void OnUpdate()
 		{
 			if (IsPrimary) {
-				// check if the rover fits conditions
-				// set delMET for distance calculations with horizontal surface speed.
 
-				if (RoverScienceGUIM.consoleGUI.isOpen) {
+				if (roverScienceGUI.consoleGUI.isOpen) {
 
-					if (checkRoverValidStatus()) rover.calculateDistanceTravelled (TimeWarp.deltaTime);
+                    // Calculate rover travelled distance
+					if (rover.checkRoverValidStatus()) rover.calculateDistanceTravelled (TimeWarp.deltaTime);
 
-
-					// rover stuff
-
-					rover.setLandingSpot ();
-					if (rover.landingSite.established)
+                    // Rover setting of landingSpot and scienceSpot
+                    rover.landingSpot.setSpot();
+					if (rover.landingSpot.established)
 						rover.setRoverLocation ();
-					if ((!rover.scienceSpot.established) && (!rover.scienceSpotReached))
-						checkAndSetScienceSpot ();
+                    if ((!rover.scienceSpot.established) && (!rover.scienceSpotReached))
+                        rover.scienceSpot.checkAndSet();
 				}
 			}
 
-
+            // Handles the debug-keys to be presesd to bring up the debug window
 			DebugKey ();
 		}
 
@@ -168,7 +164,7 @@ namespace RoverScience
 		public void analyzeScienceSample()
 		{
 			if (rover.scienceSpotReached) {
-				_ScienceSpot sciValues = new _ScienceSpot ();
+				ScienceSpot sciValues = new ScienceSpot ();
 				sciValues = rover.scienceSpot.getValues ();
 				rover.scienceSpot.reset ();
 
@@ -211,51 +207,7 @@ namespace RoverScience
 		}
 
 
-		// This handles what happens after the distance travelled passes the distance roll
-		// If the roll is successful establish a science spot
-		public void checkAndSetScienceSpot()
-		{
-
-			// Once distance travelled passes the random check distance
-			if (rover.distanceTravelled >= rover.distanceCheck) {
-				rover.totalDistanceTravelled += rover.distanceTravelled;
-				rover.resetDistanceTravelled ();
-
-				RoverScienceGUIM.addRandomConsoleJunk ();
-
-				Debug.Log ("" + rover.distanceCheck + " meter mark reached");
-
-				// Reroll distanceCheck value
-				rover.distanceCheck = rand.Next (20, 50);
-
-				// farther you are from established site the higher the chance of striking science!
-				int rNum = rand.Next (0, 100);
-				double dist = rover.distanceFromLandingSite;
-				double chanceAlgorithm = 0.75 * dist;
-
-				double chance = (chanceAlgorithm < 75) ? chanceAlgorithm : 75;
-
-				Debug.Log ("rNum: " + rNum);
-				Debug.Log ("chance: " + chance);
-				// rNum is a random number between 0 and 100
-				// chance is the percentage number we check for to determine a successful roll
-				// higher chance == higher success roll chance
-				if ((double)rNum <= chance) {
-					rover.setScienceSpotLocation ();
-
-					RoverScienceGUIM.clearConsole ();
-
-					Debug.Log ("Distance from spot is: " + rover.distanceFromScienceSpot);
-					Debug.Log ("Bearing is: " + rover.bearingToScienceSpot);
-					Debug.Log ("Something found");
-				} else {
-					// Science hotspot not found
-					Debug.Log ("Nothing found!");
-				}
-
-			}
-
-		}
+		
 
 
 
@@ -264,17 +216,13 @@ namespace RoverScience
 			if (HighLogic.LoadedSceneIsFlight) {
 				if (Input.GetKey (KeyCode.RightControl) && Input.GetKey (KeyCode.Keypad5))
 				{
-					RoverScienceGUIM.debugGUI.show ();
+					roverScienceGUI.debugGUI.show ();
 				}
 			}
 		}
 
 
-		public bool checkRoverValidStatus()
-		{
-			// Checks if rover is landed with at least one wheel on no time-warp.
-			return ((TimeWarp.CurrentRate == 1) && (vessel.horizontalSrfSpeed > (double) 0.01) && (rover.numberWheelsLanded > 0));
-		}
+		
 
 
 

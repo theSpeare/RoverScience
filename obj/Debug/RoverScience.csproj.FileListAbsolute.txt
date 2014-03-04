@@ -15,3 +15,8 @@ C:\Users\Lui\Documents\GitHub\roverScience\bin\Debug\RoverScience.pdb
 C:\Users\Lui\Documents\GitHub\roverScience\obj\Debug\RoverScience.csprojResolveAssemblyReference.cache
 C:\Users\Lui\Documents\GitHub\roverScience\obj\Debug\RoverScience.dll
 C:\Users\Lui\Documents\GitHub\roverScience\obj\Debug\RoverScience.pdb
+F:\Github\RoverScience\bin\Debug\RoverScience.dll
+F:\Github\RoverScience\bin\Debug\RoverScience.pdb
+F:\Github\RoverScience\obj\Debug\RoverScience.csprojResolveAssemblyReference.cache
+F:\Github\RoverScience\obj\Debug\RoverScience.dll
+F:\Github\RoverScience\obj\Debug\RoverScience.pdb

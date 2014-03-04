@@ -10,26 +10,13 @@ namespace RoverScience
 	{
 		public string toEdit = "empty";
 
-		bool[] buttonPressed = new bool[]{false, false, false, false, false, false, false};
-		int buttonPressedI
-		{
-			get
-			{
-				for (int i = 0; i < (buttonPressed.Length - 1); i++) {
-					if (buttonPressed [i]) {
-						return i;
-					}
-				}
-				return -1;
-			}
-		}
 
 		private void drawDebugGUI (int windowID)
 		{
 
 			GUILayout.BeginVertical ();
 			if (GUILayout.Button ("Find Science Spot")) {
-				rover.setScienceSpotLocation ();
+				rover.scienceSpot.setLocation ();
 			}
 				
 			if (GUILayout.Button ("Cheat Spot Here")) {

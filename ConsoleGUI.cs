@@ -9,8 +9,6 @@ namespace RoverScience
 
 	public partial class RoverScienceGUI
 	{
-	
-        // Test push
 
 		// Leave this alone. PartModule has its own vessel class which SHOULD do the job but
 		// For some reason removing this seemed to destroy a lot of function.
@@ -21,11 +19,10 @@ namespace RoverScience
 			}
 		}
 
-		private bool analyzeButtonPressedOnce = false;
+        private bool analyzeButtonPressedOnce = false;
 
 		private void drawRoverConsoleGUI (int windowID)
 		{
-
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 
@@ -33,6 +30,7 @@ namespace RoverScience
 				// PRINT OUT CONSOLE CONTENTS
 				if (_roverScience.allowAnalyze) {
 					GUILayout.Label ("Searching for science spot . . .");
+                    GUILayout.Label ("Total distance travelled searching: ");
 					foreach (string line in consolePrintOut) {
 						GUILayout.Label (line);
 					}
@@ -57,12 +55,12 @@ namespace RoverScience
 					}
 
 				} else {
-					_ScienceSpot sciValues = rover.scienceSpot.getValues ();
+					ScienceSpot sciValues = rover.scienceSpot.getValues ();
 
 					GUILayout.Label ("[SCIENCE SPOT REACHED]");
-					GUILayout.Label ("Total dist. travelled for this spot: " + rover.totalDistanceTravelled);
-					GUILayout.Label ("Distance from landing site: " + 
-						rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSite.location));
+					GUILayout.Label ("Total dist. travelled for this spot: " + rover.distanceTravelledTotal);
+					GUILayout.Label ("Distance from landing site: " +
+                        rover.navigation.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location));
 					GUILayout.Label ("Potential: " + sciValues.potentialString);
 
 					GUILayout.Label ("");
@@ -104,7 +102,7 @@ namespace RoverScience
 
 			}
 			
-			if (GUILayout.Button ("Control from Part")) {
+			if (GUILayout.Button ("Reorient from Part")) {
 				_roverScience.command.MakeReference ();
 			}
 			

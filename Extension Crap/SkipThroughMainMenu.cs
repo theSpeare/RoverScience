@@ -7,20 +7,24 @@ namespace RoverScience
 	[KSPAddonFixed(KSPAddon.Startup.MainMenu, true, typeof(Debug_AutoLoadQuicksaveOnStartup))]
 	public class Debug_AutoLoadQuicksaveOnStartup: MonoBehaviour
 	{
-		public static bool first = true;
+		public static bool first = false;
 		public void Start()
 		{
 			if (first)
 			{
-				first = false;
-				HighLogic.SaveFolder = "carreeerererer";
-				var game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
-				if (game != null && game.flightState != null && game.compatible)
-				{
-					HighLogic.LoadScene(GameScenes.TRACKSTATION);
-				}
+                if (Input.GetKeyDown(KeyCode.Keypad5))
+                {
+                    first = false;
+                    HighLogic.SaveFolder = "carreeerererer";
+                    var game = GamePersistence.LoadGame("persistent", HighLogic.SaveFolder, true, false);
+                    if (game != null && game.flightState != null && game.compatible)
+                    {
+                        HighLogic.LoadScene(GameScenes.TRACKSTATION);
+                    }
+                }
 			}
 		}
+
 	}
 
 }
