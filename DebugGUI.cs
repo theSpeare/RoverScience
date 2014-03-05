@@ -13,9 +13,10 @@ namespace RoverScience
 
 			GUILayout.BeginVertical ();
 
-            GUILayout.Label("distCheck: " + Math.Round(rover.distanceCheck, 2));
-            GUILayout.Label("distTrav: " + Math.Round(rover.distanceTravelled));
-            GUILayout.Label("distTravTotal: " + Math.Round(rover.distanceTravelledTotal));
+			GUILayout.Label (roverScience.RSVersion);
+			GUILayout.Label ("distCheck: " + Math.Round(rover.distanceCheck, 2));
+			GUILayout.Label ("distTrav: " + Math.Round(rover.distanceTravelled));
+			GUILayout.Label ("distTravTotal: " + Math.Round(rover.distanceTravelledTotal));
 
 			if (GUILayout.Button ("Find Science Spot")) {
 				rover.scienceSpot.setLocation (rover.minRadius,rover.maxRadius);

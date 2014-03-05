@@ -13,7 +13,7 @@ namespace RoverScience
 	{
 
         // Not necessarily updated per build. Mostly updated per major commits
-		public readonly string RSVersion = "ALPHA - Build 3";
+		public readonly string RSVersion = "PRE-RELEASE 1";
 
 		public static RoverScience Instance = null;
 		public System.Random rand = new System.Random();
