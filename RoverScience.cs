@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+	// ROVERSCIENCE PLUGIN WAS CREATED BY THESPEARE					  //
+	// FOR KERBAL SPACE PROGRAM - PLEASE SEE FORUM THREAD FOR DETAILS //
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+	
 namespace RoverScience
 {
-
 	#pragma warning disable 0108
 
 	public class RoverScience : PartModule
@@ -95,13 +99,6 @@ namespace RoverScience
 			if (IsPrimary) showGUI ();
 		}
 
-		[KSPEvent(guiActive = true, guiName = "Reset Distance")]
-		private void resetDistanceButton()
-		{
-			if (IsPrimary) rover.distanceTravelled = 0;
-		}
-
-
 		void OnDestroy()
 		{
 			Debug.Log ("RoverScience OnDestroy()");
@@ -118,7 +115,7 @@ namespace RoverScience
 						Debug.Log ("Loaded GetValue: " + vesselNode.GetValue ("analyzeDelayCheck"));
 						Debug.Log ("Loaded analyzeDelayCheck: " + analyzeDelayCheck);
 					} else {
-						analyzeDelayCheck = ((FlightGlobals.ActiveVessel.missionTime) - (TimeSpan.FromDays (30).TotalSeconds));
+						analyzeDelayCheck =  (-1)*(TimeSpan.FromDays (31).TotalSeconds);
 						Debug.Log ("No node found for analyzeDelayCheck");
 						Debug.Log ("analyzeDelayCheck is now: " + analyzeDelayCheck);
 					}
@@ -142,6 +139,7 @@ namespace RoverScience
                     Instance = this;
 					Debug.Log ("RS Instance set - " + Instance);
 
+					analyzeDelayCheck =  ((-1)*(TimeSpan.FromDays (31).TotalSeconds));
 
                     container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
                     command = part.Modules["ModuleCommand"] as ModuleCommand;
@@ -323,6 +321,7 @@ namespace RoverScience
 
 
 	}
+	
 
 }
 

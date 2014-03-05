@@ -20,6 +20,7 @@ namespace RoverScience
 			if (!roverScience.allowAnalyze) {
 				GUILayout.Label ("Must wait until next analysis can be made");
 				GUILayout.Label ("Time Remaining (d): " + Math.Round(TimeSpan.FromSeconds(roverScience.timeRemainingDelay).TotalDays, 1) + " days");
+				GUILayout.Label ("_____________________________");
 			}
 
 
