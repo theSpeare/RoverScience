@@ -128,34 +128,34 @@ namespace RoverScience
 
 		public override void OnStart(PartModule.StartState state)
 		{
-            if (HighLogic.LoadedSceneIsFlight)
-            {
-                if (IsPrimary)
-                {
-                    Debug.Log("RoverScience 2 initiated!");
-                    Debug.Log("RoverScience version: " + RSVersion);
-
-
-                    Instance = this;
-					Debug.Log ("RS Instance set - " + Instance);
-
-					analyzeDelayCheck =  ((-1)*(TimeSpan.FromDays (31).TotalSeconds));
-
-                    container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
-                    command = part.Modules["ModuleCommand"] as ModuleCommand;
-
-                    RenderingManager.AddToPostDrawQueue(0, roverScienceGUI.drawGUI);
-
-					// Must be called here otherwise they won't run their constructors for some reason
-					rover = new Rover ();
-					rover.scienceSpot = new ScienceSpot (Instance);
-					rover.landingSpot = new LandingSpot (Instance);
-                }
-                else
-                {
-                    Debug.Log("ONSTART - Not primary");
-                }
-            }
+	          if (HighLogic.LoadedSceneIsFlight)
+	            {
+	                if (IsPrimary)
+		                {
+	                    Debug.Log("RoverScience 2 initiated!");
+	                    Debug.Log("RoverScience version: " + RSVersion);
+	
+	
+	                    Instance = this;
+						Debug.Log ("RS Instance set - " + Instance);
+	
+						analyzeDelayCheck =  ((-1)*(TimeSpan.FromDays (31).TotalSeconds));
+	
+	                    container = part.Modules["ModuleScienceContainer"] as ModuleScienceContainer;
+	                    command = part.Modules["ModuleCommand"] as ModuleCommand;
+	
+	                    RenderingManager.AddToPostDrawQueue(0, roverScienceGUI.drawGUI);
+	
+						// Must be called here otherwise they won't run their constructors for some reason
+						rover = new Rover ();
+						rover.scienceSpot = new ScienceSpot (Instance);
+						rover.landingSpot = new LandingSpot (Instance);
+	                }
+	                else
+	                {
+	                    Debug.Log("ONSTART - Not primary");
+	                }
+	 	  }
 
 		}
 		
@@ -276,10 +276,10 @@ namespace RoverScience
 		}
 
 
-        public void skipAnalysisDelay()
-        {
-            analyzeDelayCheck = ((FlightGlobals.ActiveVessel.missionTime) - (TimeSpan.FromDays(30).TotalSeconds));
-        }
+	        public void skipAnalysisDelay()
+	        {
+	            analyzeDelayCheck = ((FlightGlobals.ActiveVessel.missionTime) - (TimeSpan.FromDays(30).TotalSeconds));
+	        }
 
 
 		public void DebugKey()
@@ -295,6 +295,7 @@ namespace RoverScience
 
 
 		// TAKEN FROM KERBAL ENGINEERING REDUX SOURCE by cybutek
+		// http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB
 		// This is to hopefully prevent multiple instances of this PartModule from running simultaneously
 		public bool IsPrimary
 		{
