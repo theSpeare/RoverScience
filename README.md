@@ -18,14 +18,15 @@ Spots are given a random "potential science" where there is a:
 
 Science is rolled from top to bottom so there is always a chance to generate the higher science values (albeit very low). A scalar modifier is applied for whichever body you are on. Furthermore the maximum science extractable from a body also differs from body to body. Logically, Kerbin's values should be very low.
 
+Biomes are not yet implemented yet (I believe so, but only because it hasn't been tested yet).
 
-
-## NOTE
+## NOTES
 #### HEADING
 Heading is calculated from wherever the ship reference is pointing forward. Which means if you use a pod or most of the probe cores they will point straight up to the sky - **the displayed heading will WILDLY fluctuate in this case**. There are then TWO solutions: you can either use the stock chair part, or position Rover Brain like in the screenshot below. Rover Brain has CommandModule attached to it, which means you can use its "control from here" right-click button to reorient the ship's attitude to a horizontal reference.
 
 Make sure the pointy bit POINTS FORWARD! **As long as it points forward, you can place it anywhere on your rover.**
 ![image](http://i.imgur.com/Jr0Unyb.png)
+![image](http://i.imgur.com/dPSQmY7.png)
 
 
 
@@ -33,3 +34,15 @@ Make sure the pointy bit POINTS FORWARD! **As long as it points forward, you can
 RoverScience is designed not to function unless the rover terminal is up. You can't really do anything without the terminal up, and it seemed more robust to just tie the terminal to RoverScience activity than to add a separate activate/shutdown button.
 
 ![image](http://i.imgur.com/tup2z9z.png)
+
+
+
+#### CAREFUL WHEN ANALYZING!
+When over a science spot you are shown the science potential of the spot, not the actual science value. This is to add a decision-making aspect to choosing whether or not to analyze a spot, as you can either get a great value or a low value, but it's up to you to make the decision to take the chance.
+
+Note that once you analyze the spot, the rover is locked out of analysing again for 30 Kerbal days. Of course you can just timewarp through it, but it's there as an incentive to wait for a larger science potential.
+
+ALSO be CAREFUL - take care not to accidentally "delete" the actual science data itself after analyzing as you'll be there without any science data and with a 30 day cooldown.
+
+![image](http://i.imgur.com/raWLkFp.png)
+![image](http://i.imgur.com/jW0cZbI.png)
