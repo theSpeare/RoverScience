@@ -19,19 +19,19 @@ namespace RoverScience
 
 		public System.Random rand = new System.Random();
 
-		public _randomConsolePrintOuts randomConsolePrintOuts = new _randomConsolePrintOuts();
+		public RandomConsolePrintOuts randomConsolePrintOuts = new RandomConsolePrintOuts();
 		public Vector2 scrollPosition = new Vector2 ();
 
 		private List<string> consolePrintOut = new List<string>();
 
-		private RoverScience _roverScience
+		private RoverScience roverScience
 		{
 			get{
 				return RoverScience.Instance;
 			}
 		}
 
-		private Vessel CurrentVessel
+		private Vessel vessel
 		{
 			get{
 				return FlightGlobals.ActiveVessel;
@@ -41,17 +41,15 @@ namespace RoverScience
 		private Rover rover
 		{
 			get{
-				return _roverScience.rover;
+				return roverScience.rover;
 			}
 		}
-
-
-
 
 		public RoverScienceGUI()
 		{
 			Debug.Log ("RoverScienceGUI started");
 			consoleGUI.rect.width = 250;
+            debugGUI.rect.width = 200;
 		}
 			
 

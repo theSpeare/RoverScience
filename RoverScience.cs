@@ -13,16 +13,17 @@ namespace RoverScience
 	{
 
         // Not necessarily updated per build. Mostly updated per major commits
-        public readonly string RSVersion = "ALPHA - Build 1";
+        public readonly string RSVersion = "ALPHA - Build 2";
 
 		public static RoverScience Instance = null;
 		public System.Random rand = new System.Random();
 		public ModuleScienceContainer container;
 		public ModuleCommand command;
-		public double distCounter;
 		public Rover rover;
 		public RoverScienceGUI roverScienceGUI = new RoverScienceGUI ();
 
+
+        public double distCounter;
 
         [KSPField(isPersistant = true)]
         public double analyzeDelayCheck;
@@ -35,6 +36,7 @@ namespace RoverScience
 				if (HighLogic.LoadedSceneIsFlight) {
 					return FlightGlobals.ActiveVessel;
 				} else {
+                    Debug.Log("Vessel vessel returned null!");
 					return null;
 				}
 			}
@@ -157,14 +159,12 @@ namespace RoverScience
 			if (IsPrimary) {
 
 				if (roverScienceGUI.consoleGUI.isOpen) {
-
                     // Calculate rover travelled distance
-					if (rover.checkRoverValidStatus()) rover.calculateDistanceTravelled (TimeWarp.deltaTime);
+					if (rover.validStatus) rover.calculateDistanceTravelled (TimeWarp.deltaTime);
 
 					rover.landingSpot.setSpot();
 					if (rover.landingSpot.established) rover.setRoverLocation ();
 					if ((!rover.scienceSpot.established) && (!rover.scienceSpotReached)) rover.scienceSpot.checkAndSet ();
-					
 				}
 			}
 
@@ -178,25 +178,29 @@ namespace RoverScience
 		public void analyzeScienceSample()
 		{
 			if (rover.scienceSpotReached) {
-				//ScienceSpot sciValues = new ScienceSpot ();
-				//sciValues = rover.scienceSpot.getValues ();
 
-
+                
 				ScienceExperiment sciExperiment = ResearchAndDevelopment.GetExperiment("RoverScienceExperiment");
 				ScienceSubject sciSubject = ResearchAndDevelopment.GetExperimentSubject (sciExperiment, ExperimentSituations.SrfLanded, vessel.mainBody, "");
 
 				sciSubject.subjectValue = 1;
 				sciSubject.scienceCap = 2000;
+
+                
 				float sciData = rover.scienceSpot.potentialScience;
 				Debug.Log ("rover.scienceSpot.potentialScience: " + rover.scienceSpot.potentialScience);
 
-				StoreScience (container, sciSubject, sciData);
-				container.ReviewData ();
+                if (StoreScience(container, sciSubject, sciData)) {
+                    container.ReviewData();
+                } else {
+                    Debug.Log("Failed to add science to container!");
+                }
 
 				Debug.Log ("Science retrieved! - " + sciData);
 
 				analyzeDelayCheck = FlightGlobals.ActiveVessel.missionTime;
 				rover.scienceSpot.reset ();
+
 			} else {
 				Debug.Log ("Tried to analyze while not at spot?");
 			}
@@ -205,14 +209,13 @@ namespace RoverScience
 		protected bool StoreScience(ModuleScienceContainer container, ScienceSubject subject, float data)
 		{
 
-			// Check constraints before calling to avoid status spam from the container itself
 			if (container.capacity > 0 && container.GetScienceCount() >= container.capacity)
 				return false;
 				
 			float xmitValue = 0.7f;
 			float labBoost = 0.2f;
 
-			ScienceData new_data = new ScienceData(data, xmitValue, labBoost, subject.id, subject.title);
+			ScienceData new_data = new ScienceData((data*bodyScienceScalar), xmitValue, labBoost, subject.id, subject.title);
 
 			if (container.AddData (new_data))
 				return true;
@@ -239,8 +242,12 @@ namespace RoverScience
 
 			}
 		}
-		
 
+
+        public void skipAnalysisDelay()
+        {
+            analyzeDelayCheck = ((FlightGlobals.ActiveVessel.missionTime) - (TimeSpan.FromDays(30).TotalSeconds));
+        }
 
 
 		public void DebugKey()
@@ -252,10 +259,6 @@ namespace RoverScience
 				}
 			}
 		}
-
-
-		
-
 
 
 

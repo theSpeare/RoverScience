@@ -29,14 +29,11 @@ namespace RoverScience
 		public double distanceTravelled = 0;
 		public double distanceCheck = 20;
 		public double distanceTravelledTotal = 0;
-      
 
-		public Rover()
-		{
-			Debug.Log ("ROVER HERE!");
-		}
+        public int minRadius = 25;
+        public int maxRadius = 75;
 
-		public double distanceFromLandingSite
+		public double distanceFromLandingSpot
 		{
 			get{
 				return getDistanceBetweenTwoPoints (location, landingSpot.location);
@@ -64,6 +61,14 @@ namespace RoverScience
 			}
 		}
 
+        RoverScience roverScience
+        {
+            get
+            {
+                return RoverScience.Instance;
+            }
+        }
+
 		public double heading
 		{
 			get{
@@ -81,10 +86,7 @@ namespace RoverScience
 				}
 				return false;
 			}
-
 		}
-
-        
 
 		public int numberWheelsLanded
 		{
@@ -94,30 +96,30 @@ namespace RoverScience
 			}
 		}
 
+        public bool validStatus
+        {
+            get
+            {
+                return checkRoverValidStatus();
+            }
+        }
 
 		public void calculateDistanceTravelled(double deltaTime)
 		{
-			distanceTravelled += (RoverScience.Instance.vessel.srfSpeed) * deltaTime;
-			if (!scienceSpot.established) distanceTravelledTotal += (RoverScience.Instance.vessel.srfSpeed) * deltaTime;
+			distanceTravelled += (roverScience.vessel.srfSpeed) * deltaTime;
+            if (!scienceSpot.established) distanceTravelledTotal += (roverScience.vessel.srfSpeed) * deltaTime;
 		}
 
-        public bool checkRoverValidStatus()
-        {
-            // Checks if rover is landed with at least one wheel on no time-warp.
-            return ((TimeWarp.CurrentRate == 1) && (vessel.horizontalSrfSpeed > (double)0.01) && (numberWheelsLanded > 0));
-        }
-
-        // set current rover location
         public void setRoverLocation()
         {
-            location.latitude = FlightGlobals.ActiveVessel.latitude;
-            location.longitude = FlightGlobals.ActiveVessel.longitude;
+            location.latitude = vessel.latitude;
+            location.longitude = vessel.longitude;
         }
 
 		public double getDistanceBetweenTwoPoints(COORDS _from, COORDS _to)
 		{
 
-			double bodyRadius = FlightGlobals.ActiveVessel.mainBody.Radius;
+            double bodyRadius = vessel.mainBody.Radius;
 			double dLat = (_to.latitude - _from.latitude).ToRadians();
 			double dLon = (_to.longitude - _from.longitude).ToRadians();
 			double lat1 = _from.latitude.ToRadians();
@@ -157,6 +159,12 @@ namespace RoverScience
 			distanceTravelled = 0;
 		}
 
+        private bool checkRoverValidStatus()
+        {
+            // Checks if rover is landed with at least one wheel on no time-warp.
+            return ((TimeWarp.CurrentRate == 1) && (vessel.horizontalSrfSpeed > (double)0.01) && (numberWheelsLanded > 0));
+        }
+
 		private double getRoverHeading()
 		{
 			Vector3d coM = vessel.findLocalCenterOfMass();
@@ -169,7 +177,7 @@ namespace RoverScience
 			return rotationVesselSurface.eulerAngles.y;
 		}
 
-		public int getWheelCount()
+		private int getWheelCount()
 		{
 			int wheelCount = 0;
 
@@ -187,7 +195,7 @@ namespace RoverScience
 		}
 
 
-		public int getWheelsLanded()
+		private int getWheelsLanded()
 		{
 
 			int count = 0;

@@ -12,41 +12,23 @@ namespace RoverScience
 		{
 
 			GUILayout.BeginVertical ();
+
+            GUILayout.Label("distCheck: " + Math.Round(rover.distanceCheck, 2));
+            GUILayout.Label("distTrav: " + Math.Round(rover.distanceTravelled));
+            GUILayout.Label("distTravTotal: " + Math.Round(rover.distanceTravelledTotal));
+
 			if (GUILayout.Button ("Find Science Spot")) {
-				rover.scienceSpot.setLocation ();
+				rover.scienceSpot.setLocation (rover.minRadius,rover.maxRadius);
 			}
 				
 			if (GUILayout.Button ("Cheat Spot Here")) {
 				if ((!rover.scienceSpot.established) && (consoleGUI.isOpen)) {
-					rover.scienceSpot.location.latitude = FlightGlobals.ActiveVessel.latitude;
-					rover.scienceSpot.location.longitude = FlightGlobals.ActiveVessel.longitude;
-
-					rover.scienceSpot.established = true;
+                    rover.scienceSpot.setLocation(0, 1);
 				}
 			}
 
-			if (GUILayout.Button ("Print Rover class")) {
-				Debug.Log (rover);
-			}
-
-			if (GUILayout.Button ("Print RoverScience class")) {
-				Debug.Log (_roverScience);
-			}
-
-			if (GUILayout.Button ("Print 1")) {
-				Debug.Log (rover.distanceTravelled);
-			}
-
-			if (GUILayout.Button ("Print 2")) {
-				Debug.Log (rover.scienceSpot);
-			}
-
-			if (GUILayout.Button ("Print 3")) {
-				Debug.Log (rover.scienceSpot.established);
-			}
-
 			if (GUILayout.Button ("Skip Analysis Delay")) {
-				_roverScience.analyzeDelayCheck = ((FlightGlobals.ActiveVessel.missionTime) - (TimeSpan.FromDays (30).TotalSeconds));
+                roverScience.skipAnalysisDelay();
 			}
 
 			if (GUILayout.Button ("CLEAR CONSOLE")) {

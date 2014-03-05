@@ -10,15 +10,6 @@ namespace RoverScience
 	public partial class RoverScienceGUI
 	{
 
-		// Leave this alone. PartModule has its own vessel class which SHOULD do the job but
-		// For some reason removing this seemed to destroy a lot of function.
-		Vessel vessel
-		{
-			get{
-				return FlightGlobals.ActiveVessel;
-			}
-		}
-
         private bool analyzeButtonPressedOnce = false;
 
 		private void drawRoverConsoleGUI (int windowID)
@@ -28,7 +19,7 @@ namespace RoverScience
 
 			if (!rover.scienceSpot.established) {
 				// PRINT OUT CONSOLE CONTENTS
-				if (_roverScience.allowAnalyze) {
+				if (roverScience.allowAnalyze) {
 					GUILayout.Label ("Searching for science spot . . .");
 					GUILayout.Label ("Total dist. travelled searching: " + Math.Round(rover.distanceTravelledTotal, 2));
 					foreach (string line in consolePrintOut) {
@@ -36,7 +27,7 @@ namespace RoverScience
 					}
 				} else {
 					GUILayout.Label ("Must wait until next analysis can be made");
-					GUILayout.Label ("Time Remaining (d): " + Math.Round(TimeSpan.FromSeconds(_roverScience.timeRemainingDelay).TotalDays, 1) + " days");
+					GUILayout.Label ("Time Remaining (d): " + Math.Round(TimeSpan.FromSeconds(roverScience.timeRemainingDelay).TotalDays, 1) + " days");
 				}
 
 			} else {
@@ -74,7 +65,7 @@ namespace RoverScience
 			// ACTIVATE ROVER BUTTON
 			if (!analyzeButtonPressedOnce) {
 				if (GUILayout.Button ("Analyze Science")) {
-					if ((_roverScience.allowAnalyze) && (rover.scienceSpotReached)) {
+					if ((roverScience.allowAnalyze) && (rover.scienceSpotReached)) {
 						analyzeButtonPressedOnce = true;
 						consolePrintOut.Clear ();
 
@@ -88,7 +79,7 @@ namespace RoverScience
 
 				if (GUILayout.Button ("Confirm")) {
 					analyzeButtonPressedOnce = false;
-					_roverScience.analyzeScienceSample ();
+					roverScience.analyzeScienceSample ();
 				}
 				GUILayout.EndHorizontal ();
 			}
@@ -101,7 +92,7 @@ namespace RoverScience
 			}
 			
 			if (GUILayout.Button ("Reorient from Part")) {
-				_roverScience.command.MakeReference ();
+				roverScience.command.MakeReference ();
 			}
 			
 			GUILayout.BeginHorizontal();

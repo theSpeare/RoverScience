@@ -9,7 +9,7 @@ namespace RoverScience
 
 	partial class RoverScienceGUI
 	{
-		public class _randomConsolePrintOuts
+		public class RandomConsolePrintOuts
 		{
 			List<string> strings = new List<string>();
 
@@ -25,7 +25,7 @@ namespace RoverScience
 				return "Nothing seems to be here";
 			}
 
-			public _randomConsolePrintOuts()
+			public RandomConsolePrintOuts()
 			{
 				strings.Add("Nothing seems to be here");
 				strings.Add("Running scans, checking");

@@ -40,6 +40,23 @@ namespace RoverScience
 			}
 		}
 
+        Vessel vessel
+        {
+            get
+            {
+                if (HighLogic.LoadedSceneIsFlight)
+                {
+                    return FlightGlobals.ActiveVessel;
+                }
+                else
+                {
+                    Debug.Log("Vessel vessel returned null!");
+                    return null;
+                }
+            }
+
+        }
+
 		public void generateScience()
 		{
 			Debug.Log ("generateScience()");
@@ -89,23 +106,26 @@ namespace RoverScience
 
                 roverScienceGUI.addRandomConsoleJunk();
 
-                Debug.Log("" + rover.distanceCheck + " meter mark reached");
+                //Debug.Log("" + rover.distanceCheck + " meter mark reached");
 
                 // Reroll distanceCheck value
                 rover.distanceCheck = rand.Next(20, 50);
 					
                 // farther you are from established site the higher the chance of striking science!
 
-			
 				int rNum = rand.Next(0, 100);
-				double dist = rover.distanceFromLandingSite;
-                double chanceAlgorithm = 0.75 * dist;
+				double dist = rover.distanceFromLandingSpot;
 
-                double chance = (chanceAlgorithm < 75) ? chanceAlgorithm : 75;
+                // chanceAlgorithm will be modelled on y = 7 * sqrt(x) with y as chance and x as distance from landingspot
+
+                double chanceAlgorithm = (7 * Math.Sqrt(dist));
+
+
+                double chance = (chanceAlgorithm < 90) ? chanceAlgorithm : 90;
 
                 Debug.Log ("rNum: " + rNum);
                 Debug.Log ("chance: " + chance);
-				Debug.Log ("Yes? " + ((double)rNum <= chance));
+				Debug.Log ("rNum <= chance: " + ((double)rNum <= chance));
 					
                 // rNum is a random number between 0 and 100
                 // chance is the percentage number we check for to determine a successful roll
@@ -113,7 +133,7 @@ namespace RoverScience
                 if ((double)rNum <= chance)
                 {
 						
-                    setLocation();
+                    setLocation(rover.minRadius, rover.maxRadius);
 					Debug.Log ("setLocation");
 
                     roverScienceGUI.clearConsole();
@@ -135,74 +155,41 @@ namespace RoverScience
         }
 
         // Method to set location
-        public void setLocation()
+        public void setLocation(int minRadius, int maxRadius)
         {
-            int minRadius = 25;
-            int maxRadius = 70;
-
+            // generate random radius for where to spot placement
             randomRadius = rand.Next(minRadius, maxRadius);
 
-            double bodyRadius = FlightGlobals.ActiveVessel.mainBody.Radius;
-            Debug.Log(FlightGlobals.ActiveVessel.mainBody.Radius.ToString());
-
+            double bodyRadius = vessel.mainBody.Radius;
             double randomAngle = rand.NextDouble() * (double)(1.9);
             double randomTheta = (randomAngle * (Math.PI));
-
             double angularDistance = randomRadius / bodyRadius;
-
-            //Debug.Log ("angularDistance " + angularDistance);
-            //Debug.Log ("Math.Cos(angularDistance) " + Math.Cos (angularDistance));
-            //Debug.Log ("randomRadius: " + randomRadius);
-            //Debug.Log ("bodyRadius: " + bodyRadius);
-
-
-
-            double currentLatitude = FlightGlobals.ActiveVessel.latitude.ToRadians();
-            double currentLongitude = FlightGlobals.ActiveVessel.longitude.ToRadians();
-
-            //Debug.Log ("currentLatitude: " + currentLatitude);
-            //Debug.Log ("currentLongitude: " + currentLongitude);
+            double currentLatitude = vessel.latitude.ToRadians();
+            double currentLongitude = vessel.longitude.ToRadians();
 
             double spotLat = Math.Asin(Math.Sin(currentLatitude) * Math.Cos(angularDistance) +
                 Math.Cos(currentLatitude) * Math.Sin(angularDistance) * Math.Cos(randomTheta));
 
-            //Debug.Log ("Math.Sin(currentLatitude) " + Math.Sin (currentLatitude));
-
-            //Debug.Log ("Math.Cos(randomTheta) " + Math.Cos (randomTheta));
-            //Debug.Log ("Math.Sin(currentLatitude)*Math.Cos(angularDistance) " + (Math.Sin (currentLatitude) * Math.Cos (angularDistance)));
-            //Debug.Log ("Math.Cos(currentLatitude)*Math.Sin(angularDistance)*Math.Cos(randomTheta) " + (Math.Cos (currentLatitude) * Math.Sin (angularDistance) * Math.Cos (randomTheta)));
-
-            //Debug.Log ("spotLat: " + spotLat);
-
             double spotLon = currentLongitude + Math.Atan2(Math.Sin(randomTheta) * Math.Sin(angularDistance) * Math.Cos(currentLatitude),
                 Math.Cos(angularDistance) - Math.Sin(currentLatitude) * Math.Sin(spotLat));
-
-            //Debug.Log ("spotLon: " + spotLon);
 
             location.latitude = spotLat.ToDegrees();
             location.longitude = spotLon.ToDegrees();
 
-            //Debug.Log ("scienceSpot.location.latitude: " + scienceSpot.location.latitude);
-            //Debug.Log ("scienceSpot.location.longitude: " + scienceSpot.location.longitude);
-
-
             established = true;
 
-			Debug.Log ("attempting to generateScience");
-            generateScience();
-			Debug.Log ("completed generatingScience?");
-			Debug.Log ("potentialScience after generate(): " + potentialScience);
-			Debug.Log ("potentialString after generate(): " + potentialString);
-
+            rover.scienceSpot.generateScience();
+			
             rover.distanceTravelledTotal = 0;
 
-
+            Debug.Log("== setLocation() ==");
             Debug.Log("randomAngle: " + Math.Round(randomAngle, 4));
-            Debug.Log("random_theta (radians): " + Math.Round(randomTheta, 4));
-            Debug.Log("random_theta (degrees?): " + Math.Round((randomTheta.ToDegrees()), 4));
-
+            Debug.Log("randomTheta (radians): " + Math.Round(randomTheta, 4));
+            Debug.Log("randomTheta (degrees?): " + Math.Round((randomTheta.ToDegrees()), 4));
+            Debug.Log(" ");
             Debug.Log("randomRadius selected: " + randomRadius);
-            Debug.Log("distance to scienceSpot: " + rover.distanceFromScienceSpot);
+            Debug.Log("distance to ScienceSpot: " + rover.distanceFromScienceSpot);
+            Debug.Log("==================");
         }
 
 		public void reset()
@@ -212,8 +199,8 @@ namespace RoverScience
 			location.longitude = 0;
 			location.latitude = 0;
 
-			RoverScience.Instance.rover.resetDistanceTravelled ();
-			RoverScience.Instance.rover.distanceTravelledTotal = 0;
+			rover.resetDistanceTravelled ();
+			rover.distanceTravelledTotal = 0;
 		}
 
 		public enum potential

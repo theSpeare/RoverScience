@@ -12,8 +12,8 @@ namespace RoverScience
 		public void FixedUpdate()
 		{
 			if (first) {
-				//if (Input.GetKeyDown(KeyCode.Keypad5))
-				//{
+                if ((Input.GetKey(KeyCode.RightControl)) && (Input.GetKey(KeyCode.Keypad5)))
+				{
 					Debug.Log ("Pressed");
                     first = false;
                     HighLogic.SaveFolder = "carreeerererer";
@@ -22,7 +22,7 @@ namespace RoverScience
                     {
                         HighLogic.LoadScene(GameScenes.TRACKSTATION);
                     }
-				//}
+				}
 			}
 		}
 
