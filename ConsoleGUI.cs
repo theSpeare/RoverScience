@@ -17,18 +17,20 @@ namespace RoverScience
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 
+			if (!roverScience.allowAnalyze) {
+				GUILayout.Label ("Must wait until next analysis can be made");
+				GUILayout.Label ("Time Remaining (d): " + Math.Round(TimeSpan.FromSeconds(roverScience.timeRemainingDelay).TotalDays, 1) + " days");
+			}
+
+
 			if (!rover.scienceSpot.established) {
 				// PRINT OUT CONSOLE CONTENTS
-				if (roverScience.allowAnalyze) {
+
 					GUILayout.Label ("Searching for science spot . . .");
 					GUILayout.Label ("Total dist. travelled searching: " + Math.Round(rover.distanceTravelledTotal, 2));
 					foreach (string line in consolePrintOut) {
 						GUILayout.Label (line);
 					}
-				} else {
-					GUILayout.Label ("Must wait until next analysis can be made");
-					GUILayout.Label ("Time Remaining (d): " + Math.Round(TimeSpan.FromSeconds(roverScience.timeRemainingDelay).TotalDays, 1) + " days");
-				}
 
 			} else {
 				if (!rover.scienceSpotReached) {

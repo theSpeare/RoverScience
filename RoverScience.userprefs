@@ -1,12 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="ScienceSpot.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="RoverScience.cs">
     <Files>
       <File FileName="DebugGUI.cs" Line="1" Column="1" />
       <File FileName="ConsoleGUI.cs" Line="1" Column="1" />
-      <File FileName="RoverScience.cs" Line="1" Column="1" />
+      <File FileName="RoverScience.cs" Line="16" Column="54" />
+      <File FileName="ScienceSpot.cs" Line="72" Column="46" />
       <File FileName="Rover.cs" Line="1" Column="1" />
-      <File FileName="ScienceSpot.cs" Line="238" Column="22" />
       <File FileName="LandingSpot.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

@@ -13,7 +13,7 @@ namespace RoverScience
 	{
 
         // Not necessarily updated per build. Mostly updated per major commits
-        public readonly string RSVersion = "ALPHA - Build 2";
+		public readonly string RSVersion = "ALPHA - Build 3";
 
 		public static RoverScience Instance = null;
 		public System.Random rand = new System.Random();
@@ -43,7 +43,7 @@ namespace RoverScience
 
 		}
 
-		public bool allowAnalyze
+		public bool allowAnalyze 
 		{
 			get{
 				if ((FlightGlobals.ActiveVessel.missionTime - analyzeDelayCheck) > (TimeSpan.FromDays(30).TotalSeconds)) {
@@ -61,7 +61,7 @@ namespace RoverScience
 			}
 		}
 
-		public double timeRemainingDelay
+		public double timeRemainingDelay 
 		{
 			get{
 				return (TimeSpan.FromDays (30).TotalSeconds - delayDifference);
@@ -73,6 +73,13 @@ namespace RoverScience
 		{
 			get{
 				return getBodyScienceScalar ();
+			}
+		}
+
+		public float bodyScienceCap 
+		{
+			get{
+				return getBodyScienceCap ();
 			}
 		}
 
@@ -184,9 +191,8 @@ namespace RoverScience
 				ScienceSubject sciSubject = ResearchAndDevelopment.GetExperimentSubject (sciExperiment, ExperimentSituations.SrfLanded, vessel.mainBody, "");
 
 				sciSubject.subjectValue = 1;
-				sciSubject.scienceCap = 2000;
+				sciSubject.scienceCap = bodyScienceCap;
 
-                
 				float sciData = rover.scienceSpot.potentialScience;
 				Debug.Log ("rover.scienceSpot.potentialScience: " + rover.scienceSpot.potentialScience);
 
@@ -206,7 +212,7 @@ namespace RoverScience
 			}
 		}
 
-		protected bool StoreScience(ModuleScienceContainer container, ScienceSubject subject, float data)
+		public bool StoreScience(ModuleScienceContainer container, ScienceSubject subject, float data)
 		{
 
 			if (container.capacity > 0 && container.GetScienceCount() >= container.capacity)
@@ -224,13 +230,13 @@ namespace RoverScience
 			return false;
 		}
 
-		public float getBodyScienceScalar ()
+		private float getBodyScienceScalar ()
 		{
 			string currentBodyName = FlightGlobals.ActiveVessel.mainBody.bodyName;
 
 			switch (currentBodyName) {
 			case "Kerbin":
-				return 0.1f;
+				return 0.2f;
 			case "Sun":
 				return 0;
 			case "Mun":
@@ -241,6 +247,34 @@ namespace RoverScience
 				return 1;
 
 			}
+		}
+
+		private float getBodyScienceCap()
+		{
+			string currentBodyName = FlightGlobals.ActiveVessel.mainBody.bodyName;
+			float scalar = 1;
+			float scienceCap = 2000;
+
+			switch (currentBodyName) {
+
+			case "Kerbin":
+				scalar = 0.2f;
+				break;
+			case "Sun":
+				scalar = 0f;
+				break;
+			case "Mun":
+				scalar = 0.6f;
+				break;
+			case "Minmus":
+				scalar = 0.5f;
+				break;
+			default:
+				scalar = 1f;
+				break;
+			}
+
+			return (scalar*scienceCap);
 		}
 
 
