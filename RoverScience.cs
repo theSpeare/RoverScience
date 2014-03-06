@@ -188,10 +188,15 @@ namespace RoverScience
 				ScienceExperiment sciExperiment = ResearchAndDevelopment.GetExperiment("RoverScienceExperiment");
 				ScienceSubject sciSubject = ResearchAndDevelopment.GetExperimentSubject (sciExperiment, ExperimentSituations.SrfLanded, vessel.mainBody, "");
 
-				sciSubject.subjectValue = 1;
+				sciSubject.subjectValue = 20;
 				sciSubject.scienceCap = bodyScienceCap;
 
-				float sciData = rover.scienceSpot.potentialScience;
+				float sciData = (rover.scienceSpot.potentialScience)/20;
+
+				if (rover.scienceSpot.potentialScience > sciSubject.scienceCap) {
+					sciData = sciSubject.scienceCap;
+				}
+
 				Debug.Log ("rover.scienceSpot.potentialScience: " + rover.scienceSpot.potentialScience);
 
                 if (StoreScience(container, sciSubject, sciData)) {
@@ -215,8 +220,11 @@ namespace RoverScience
 
 			if (container.capacity > 0 && container.GetScienceCount() >= container.capacity)
 				return false;
+		
+			if (container.GetStoredDataCount () != 0)
+				return false;
 				
-			float xmitValue = 0.7f;
+			float xmitValue = 0.6f;
 			float labBoost = 0.2f;
 
 			ScienceData new_data = new ScienceData((data*bodyScienceScalar), xmitValue, labBoost, subject.id, subject.title);
@@ -234,13 +242,13 @@ namespace RoverScience
 
 			switch (currentBodyName) {
 			case "Kerbin":
-				return 0.2f;
+				return 0.01f;
 			case "Sun":
 				return 0;
 			case "Mun":
-				return 0.7f;
+				return 0.3f;
 			case "Minmus":
-				return 0.60f;
+				return 0.2f;
 			default:
 				return 1;
 
@@ -256,16 +264,16 @@ namespace RoverScience
 			switch (currentBodyName) {
 
 			case "Kerbin":
-				scalar = 0.2f;
+				scalar = 0.09f;
 				break;
 			case "Sun":
 				scalar = 0f;
 				break;
 			case "Mun":
-				scalar = 0.6f;
+				scalar = 0.3f;
 				break;
 			case "Minmus":
-				scalar = 0.5f;
+				scalar = 0.2f;
 				break;
 			default:
 				scalar = 1f;

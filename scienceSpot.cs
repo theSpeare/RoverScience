@@ -67,7 +67,7 @@ namespace RoverScience
 				return;
 			} 
 
-			if (rand.Next (0, 100) < 19) {
+			if (rand.Next (0, 100) < 20) {
 				potentialString = getNamePotential (potential.high);
 				potentialScience = rand.Next (400, 1000);
 				Debug.Log ("high");

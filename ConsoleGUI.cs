@@ -37,10 +37,10 @@ namespace RoverScience
 				if (!rover.scienceSpotReached) {
 					double relativeBearing = rover.heading - rover.bearingToScienceSpot;
 					GUILayout.Label ("[POTENTIAL SCIENCE SPOT]");
-					GUILayout.Label ("Distance to: " + rover.distanceFromScienceSpot);
-					GUILayout.Label ("Bearing of Site: " + rover.bearingToScienceSpot);
-					GUILayout.Label ("Rover Bearing: " + rover.heading);
-					GUILayout.Label ("Rel. Bearing: " + relativeBearing);
+					GUILayout.Label ("Distance to (m): " + Math.Round(rover.distanceFromScienceSpot, 1));
+					GUILayout.Label ("Bearing of Site (degrees): " + Math.Round(rover.bearingToScienceSpot, 1));
+					GUILayout.Label ("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
+					GUILayout.Label ("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
 
 					if (relativeBearing < 0) {
 						GUILayout.Label ("TURN RIGHT");
@@ -50,9 +50,9 @@ namespace RoverScience
 
 				} else {
 					GUILayout.Label ("[SCIENCE SPOT REACHED]");
-					GUILayout.Label ("Total dist. travelled for this spot: " + rover.distanceTravelledTotal);
+					GUILayout.Label ("Total dist. travelled for this spot: " + Math.Round(rover.distanceTravelledTotal, 1));
 					GUILayout.Label ("Distance from landing site: " +
-                        rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location));
+						Math.Round(rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location), 1));
 					GUILayout.Label ("Potential: " + rover.scienceSpot.potentialString);
 
 					GUILayout.Label ("");
@@ -68,10 +68,18 @@ namespace RoverScience
 			// ACTIVATE ROVER BUTTON
 			if (!analyzeButtonPressedOnce) {
 				if (GUILayout.Button ("Analyze Science")) {
-					if ((roverScience.allowAnalyze) && (rover.scienceSpotReached)) {
-						analyzeButtonPressedOnce = true;
-						consolePrintOut.Clear ();
+					if (roverScience.container.GetStoredDataCount () == 0) {
+						if ((roverScience.allowAnalyze) && (rover.scienceSpotReached)) {
+							analyzeButtonPressedOnce = true;
+							consolePrintOut.Clear ();
 
+						} else if (!roverScience.allowAnalyze) {
+							ScreenMessages.PostScreenMessage ("Cannot analyze - Rover on cooldown!", 3, ScreenMessageStyle.UPPER_CENTER);
+						} else if (!rover.scienceSpotReached) {
+							ScreenMessages.PostScreenMessage ("Cannot analyze - Get to the Science Spot first!", 3, ScreenMessageStyle.UPPER_CENTER);
+						}
+					} else {
+						ScreenMessages.PostScreenMessage ("Cannot analyze - Rover Brain already contains data!", 3, ScreenMessageStyle.UPPER_CENTER);
 					}
 				}
 			} else {

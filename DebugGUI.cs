@@ -14,6 +14,7 @@ namespace RoverScience
 			GUILayout.BeginVertical ();
 
 			GUILayout.Label (roverScience.RSVersion);
+			GUILayout.Label ("# Data Stored: " + roverScience.container.GetStoredDataCount ());
 			GUILayout.Label ("distCheck: " + Math.Round(rover.distanceCheck, 2));
 			GUILayout.Label ("distTrav: " + Math.Round(rover.distanceTravelled));
 			GUILayout.Label ("distTravTotal: " + Math.Round(rover.distanceTravelledTotal));
@@ -24,7 +25,9 @@ namespace RoverScience
 				
 			if (GUILayout.Button ("Cheat Spot Here")) {
 				if ((!rover.scienceSpot.established) && (consoleGUI.isOpen)) {
-                    rover.scienceSpot.setLocation(0, 1);
+					rover.scienceSpot.setLocation (0, 1);
+				} else if (rover.scienceSpot.established){
+					rover.scienceSpot.reset ();
 				}
 			}
 
