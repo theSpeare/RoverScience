@@ -18,10 +18,15 @@ namespace RoverScience
 			GUILayout.Label ("distCheck: " + Math.Round(rover.distanceCheck, 2));
 			GUILayout.Label ("distTrav: " + Math.Round(rover.distanceTravelled));
 			GUILayout.Label ("distTravTotal: " + Math.Round(rover.distanceTravelledTotal));
+			GUIBreakline ();
+			GUILayout.Label ("currentScalarDecay: " + roverScience.scienceDecayScalar);
+			GUILayout.Label ("generatedScience: " + rover.scienceSpot.potentialScience);
+			GUILayout.Label ("with decay: " + rover.scienceSpot.potentialScience * roverScience.scienceDecayScalar);
 
 			if (GUILayout.Button ("Find Science Spot")) {
 				rover.scienceSpot.setLocation (rover.minRadius,rover.maxRadius);
 			}
+				
 				
 			if (GUILayout.Button ("Cheat Spot Here")) {
 				if ((!rover.scienceSpot.established) && (consoleGUI.isOpen)) {
@@ -31,17 +36,30 @@ namespace RoverScience
 				}
 			}
 
-			if (GUILayout.Button ("Skip Analysis Delay")) {
-                roverScience.skipAnalysisDelay();
-			}
-
 			if (GUILayout.Button ("CLEAR CONSOLE")) {
 				consolePrintOut.Clear ();
 			}
 
-			GUILayout.BeginHorizontal ();
+			GUIBreakline ();
 
+			GUILayout.Label("Times Analyzed: " + roverScience.amountOfTimesAnalyzed);
+
+			GUILayout.BeginHorizontal ();
+			if (GUILayout.Button ("-")) {
+				if (roverScience.amountOfTimesAnalyzed > 0)
+					roverScience.amountOfTimesAnalyzed--;
+			}
+
+			if (GUILayout.Button ("+")) {
+				roverScience.amountOfTimesAnalyzed++;
+			}
+
+			if (GUILayout.Button("0")){
+				roverScience.amountOfTimesAnalyzed = 0;
+			}
 			GUILayout.EndHorizontal ();
+
+			GUIBreakline ();
 
 			if (GUILayout.Button ("Close Window")) {
 				debugGUI.hide ();
@@ -50,6 +68,12 @@ namespace RoverScience
 			GUILayout.EndVertical ();
 
 			GUI.DragWindow ();
+		}
+
+		private void GUIBreakline ()
+		{
+			GUILayout.BeginHorizontal ();
+			GUILayout.EndHorizontal ();
 		}
 	}
 }

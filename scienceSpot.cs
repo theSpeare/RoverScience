@@ -61,34 +61,34 @@ namespace RoverScience
 		{
 			Debug.Log ("generateScience()");
 			if (rand.Next (0, 100) < 2) {
-				potentialString = getNamePotential (potential.vhigh);
-				potentialScience = rand.Next (1000, 2000);
+				potentialString = "Very High! [4]";
+				potentialScience = rand.Next (400, 700);
 				Debug.Log ("vhigh");
 				return;
 			} 
 
-			if (rand.Next (0, 100) < 20) {
-				potentialString = getNamePotential (potential.high);
-				potentialScience = rand.Next (400, 1000);
+			if (rand.Next (0, 100) < 14) {
+				potentialString = "High! [3]";
+				potentialScience = rand.Next (150, 400);
 				Debug.Log ("high");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 45) {
-				potentialString = getNamePotential (potential.normal);
-				potentialScience = rand.Next (300, 400);
+				potentialString = "Normal [2]" ;
+				potentialScience = rand.Next (70, 150);
 				Debug.Log ("normal");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 70) {
-				potentialString = getNamePotential (potential.low);
-				potentialScience = rand.Next (20, 300);
+				potentialString = "Low [1]";
+				potentialScience = rand.Next (20, 70);
 				Debug.Log ("low");
 				return;
 			}
 				
-			potentialString = getNamePotential (potential.vlow);
+			potentialString = "Very Low! [0]";
 			potentialScience = rand.Next (0, 10);
 
 		}
@@ -178,7 +178,7 @@ namespace RoverScience
 
             established = true;
 
-            rover.scienceSpot.generateScience();
+			this.generateScience();
 			
             rover.distanceTravelledTotal = 0;
 
@@ -202,32 +202,6 @@ namespace RoverScience
 			rover.resetDistanceTravelled ();
 			rover.distanceTravelledTotal = 0;
 		}
-
-		public enum potential
-		{
-			vlow, low, normal, high, vhigh
-		}
-
-
-		public string getNamePotential (potential p)
-		{
-			switch (p)
-			{
-			case potential.vlow:
-				return "Very Low - 1";
-			case potential.low:
-				return "Low - 2";
-			case potential.normal:
-				return "Average - 3";
-			case potential.high:
-				return "High! - 4";
-			case potential.vhigh:
-				return "Very High! - 5";
-			default:
-				return null;
-			}
-		}
-
 	}
 
 	

@@ -17,12 +17,8 @@ namespace RoverScience
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 
-			if (!roverScience.allowAnalyze) {
-				GUILayout.Label ("Must wait until next analysis can be made");
-				GUILayout.Label ("Time Remaining (d): " + Math.Round(TimeSpan.FromSeconds(roverScience.timeRemainingDelay).TotalDays, 1) + " days");
-				GUILayout.Label ("_____________________________");
-			}
-
+			GUILayout.Label ("Times Analyzed: " + roverScience.amountOfTimesAnalyzed);
+			GUILayout.Label ("");
 
 			if (!rover.scienceSpot.established) {
 				// PRINT OUT CONSOLE CONTENTS
@@ -42,10 +38,10 @@ namespace RoverScience
 					GUILayout.Label ("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
 					GUILayout.Label ("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
 
-					if (relativeBearing < 0) {
-						GUILayout.Label ("TURN RIGHT");
-					} else {
+					if (rover.heading > rover.bearingToScienceSpot) {
 						GUILayout.Label ("TURN LEFT");
+					} else {
+						GUILayout.Label ("TURN RIGHT");
 					}
 
 				} else {
@@ -57,7 +53,7 @@ namespace RoverScience
 
 					GUILayout.Label ("");
 
-					GUILayout.Label ("WARNING: BY ANALYZING THIS SITE THE ROVER CANNOT ANALYZE FOR ANOTHER 30 KERBAL DAYS");
+					GUILayout.Label ("NOTE: The more you analyze, the less you will get each time!");
 				}
 
 			}
@@ -69,12 +65,10 @@ namespace RoverScience
 			if (!analyzeButtonPressedOnce) {
 				if (GUILayout.Button ("Analyze Science")) {
 					if (roverScience.container.GetStoredDataCount () == 0) {
-						if ((roverScience.allowAnalyze) && (rover.scienceSpotReached)) {
+						if (rover.scienceSpotReached) {
 							analyzeButtonPressedOnce = true;
 							consolePrintOut.Clear ();
 
-						} else if (!roverScience.allowAnalyze) {
-							ScreenMessages.PostScreenMessage ("Cannot analyze - Rover on cooldown!", 3, ScreenMessageStyle.UPPER_CENTER);
 						} else if (!rover.scienceSpotReached) {
 							ScreenMessages.PostScreenMessage ("Cannot analyze - Get to the Science Spot first!", 3, ScreenMessageStyle.UPPER_CENTER);
 						}

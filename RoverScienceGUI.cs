@@ -49,7 +49,7 @@ namespace RoverScience
 		{
 			Debug.Log ("RoverScienceGUI started");
 			consoleGUI.rect.width = 250;
-            debugGUI.rect.width = 200;
+			debugGUI.rect.width = 230;
 		}
 			
 
