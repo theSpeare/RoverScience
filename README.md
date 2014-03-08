@@ -10,15 +10,17 @@ To do science with a rover, you must have a vessel with at least one wheel in co
 
 Spots are given a random "potential science" where there is a:
 
-- 2% chance of generating a base value of (1000-2000) science.
-- 19% chance (400-1000)
-- 45% chance (300-400)
-- 70% chance (20-300)
-- else: (0,10)
+- 2% chance of generating a base value of (400-700) science.
+- 19% chance (150-400)
+- 45% chance (70-150)
+- 70% chance (20-70)
+- else: (0 - 10)
 
 Science is rolled from top to bottom so there is always a chance to generate the higher science values (albeit very low). A scalar modifier is applied for whichever body you are on. Furthermore the maximum science extractable from a body also differs from body to body. Logically, Kerbin's values should be very low.
 
 Biomes are not yet implemented yet (I believe so, but only because it hasn't been tested yet).
+
+
 
 ## NOTES
 #### HEADING
@@ -40,9 +42,6 @@ RoverScience is designed not to function unless the rover terminal is up. You ca
 #### CAREFUL WHEN ANALYZING!
 When over a science spot you are shown the science potential of the spot, not the actual science value. This is to add a decision-making aspect to choosing whether or not to analyze a spot, as you can either get a great value or a low value, but it's up to you to make the decision to take the chance.
 
-Note that once you analyze the spot, the rover is locked out of analysing again for 30 Kerbal days. Of course you can just timewarp through it, but it's there as an incentive to wait for a larger science potential.
+**As of pre-release 2, there is no longer a delay between analyses. However, each analysis will decrease the amount of science returned. The science should be normal from analyses 0 to 3, but after that the science will begin to get lower and lower. Make sure you take those high potentials as soon as possible!**
 
 ALSO be CAREFUL - take care not to accidentally "delete" the actual science data itself after analyzing as you'll be there without any science data and with a 30 day cooldown.
-
-![image](http://i.imgur.com/raWLkFp.png)
-![image](http://i.imgur.com/jW0cZbI.png)
