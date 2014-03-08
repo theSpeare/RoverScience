@@ -138,8 +138,7 @@ namespace RoverScience
 				}
 			}
 
-			// Handles the debug-keys to be presesd to bring up the debug window
-			DebugKey ();
+			keyboardShortcuts ();
 		}
 		// Much credit to a.g. as his source helped to figure out how to utilize the experiment and its data
 		// https://github.com/angavrilov/ksp-surface-survey/blob/master/SurfaceSurvey.cs#L276
@@ -261,9 +260,16 @@ namespace RoverScience
 			return (scalar * scienceCap);
 		}
 
-		public void DebugKey ()
+		public void keyboardShortcuts ()
 		{
+
 			if (HighLogic.LoadedSceneIsFlight) {
+				// CONSOLE WINDOW
+				if (Input.GetKey (KeyCode.LeftControl) && Input.GetKey (KeyCode.R) && Input.GetKey (KeyCode.S)) {
+					roverScienceGUI.consoleGUI.show ();
+				}
+
+				// DEBUG WINDOW
 				if (Input.GetKey (KeyCode.RightControl) && Input.GetKey (KeyCode.Keypad5)) {
 					roverScienceGUI.debugGUI.show ();
 				}
