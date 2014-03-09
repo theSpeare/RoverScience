@@ -16,8 +16,8 @@ namespace RoverScience
 			GUILayout.Label (roverScience.RSVersion);
 			GUILayout.Label ("# Data Stored: " + roverScience.container.GetStoredDataCount ());
 			GUILayout.Label ("distCheck: " + Math.Round(rover.distanceCheck, 2));
-			GUILayout.Label ("distTrav: " + Math.Round(rover.distanceTravelled));
-			GUILayout.Label ("distTravTotal: " + Math.Round(rover.distanceTravelledTotal));
+			GUILayout.Label ("distTrav: " + Math.Round(rover.distanceTraveled));
+			GUILayout.Label ("distTravTotal: " + Math.Round(rover.distanceTraveledTotal));
 			GUIBreakline ();
 			GUILayout.Label ("currentScalarDecay: " + roverScience.scienceDecayScalar);
 			GUILayout.Label ("generatedScience: " + rover.scienceSpot.potentialScience);

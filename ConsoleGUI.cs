@@ -12,51 +12,107 @@ namespace RoverScience
 
         private bool analyzeButtonPressedOnce = false;
 
+        private string stringDriveDirection(double destination, double currentHeading)
+        {
+            // This will calculate the closest angle to the destination, given a current heading.
+            // Everything here will be in degrees, not radians
+
+            double difference = currentHeading - destination;
+            double absDifference = Math.Abs(difference);
+            double relative = (absDifference > 180) ? (360 - absDifference) : absDifference;
+
+
+            if (relative < 5)
+            {
+                return "DRIVE FORWARD";
+            }
+
+            if (relative > 175)
+            {
+                return "U-TURN";
+            }
+
+            // PROBLEM!
+
+
+            //double reference = (destination + 180);
+            //reference = (reference > 360) ? (reference - 360) : reference;
+
+            //if ((currentHeading > destination) && (currentHeading > reference))
+            //{
+            //    return "TURN LEFT";
+            //}
+            
+
+            return "ERROR - Can't resolve DriveDirection";
+        }
+
 		private void drawRoverConsoleGUI (int windowID)
 		{
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 
 			GUILayout.Label ("Times Analyzed: " + roverScience.amountOfTimesAnalyzed);
-			GUILayout.Label ("");
+            GUIBreakline();
 
-			if (!rover.scienceSpot.established) {
-				// PRINT OUT CONSOLE CONTENTS
+            if (!rover.landingSpot.established)
+            {
+                GUILayout.Label("No landing spot established!");
+                GUILayout.Label("You must first establish a landing spot by landing somewhere with wheels");
+                GUIBreakline();
+                GUILayout.Label("Rover wheels detected: " + rover.numberWheels);
+                GUILayout.Label("Rover wheels landed: " + rover.numberWheelsLanded);
+                   
+            } else {
+                if (!rover.scienceSpot.established)
+                {
+                    // PRINT OUT CONSOLE CONTENTS
 
-					GUILayout.Label ("Searching for science spot . . .");
-					GUILayout.Label ("Total dist. travelled searching: " + Math.Round(rover.distanceTravelledTotal, 2));
-					foreach (string line in consolePrintOut) {
-						GUILayout.Label (line);
-					}
+                    GUILayout.Label("Drive around to search for science spots . . .");
+                    GUILayout.Label("Total dist. traveled searching for this spot: " + Math.Round(rover.distanceTraveledTotal, 2));
+                    foreach (string line in consolePrintOut)
+                    {
+                        GUILayout.Label(line);
+                    }
 
-			} else {
-				if (!rover.scienceSpotReached) {
-					double relativeBearing = rover.heading - rover.bearingToScienceSpot;
-					GUILayout.Label ("[POTENTIAL SCIENCE SPOT]");
-					GUILayout.Label ("Distance to (m): " + Math.Round(rover.distanceFromScienceSpot, 1));
-					GUILayout.Label ("Bearing of Site (degrees): " + Math.Round(rover.bearingToScienceSpot, 1));
-					GUILayout.Label ("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
-					GUILayout.Label ("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
+                } else {
+                    if (!rover.scienceSpotReached)
+                    {
+                        double relativeBearing = rover.heading - rover.bearingToScienceSpot;
+                        GUILayout.Label("[POTENTIAL SCIENCE SPOT]");
+                        GUILayout.Label("Distance to (m): " + Math.Round(rover.distanceFromScienceSpot, 1));
+                        GUILayout.Label("Bearing of Site (degrees): " + Math.Round(rover.bearingToScienceSpot, 1));
+                        GUILayout.Label("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
+                        GUILayout.Label("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
 
-					if (rover.heading > rover.bearingToScienceSpot) {
-						GUILayout.Label ("TURN LEFT");
-					} else {
-						GUILayout.Label ("TURN RIGHT");
-					}
+                        // PRINT DIRECTION TO DRIVE IN
+                        if (Math.Abs(relativeBearing) < 5) {
+                            GUILayout.Label("STRAIGHT");
+                        } else if (rover.heading > rover.bearingToScienceSpot)
+                        {
+                            GUILayout.Label("TURN LEFT");
+                        }
+                        else
+                        {
+                            GUILayout.Label("TURN RIGHT");
+                        }
 
-				} else {
-					GUILayout.Label ("[SCIENCE SPOT REACHED]");
-					GUILayout.Label ("Total dist. travelled for this spot: " + Math.Round(rover.distanceTravelledTotal, 1));
-					GUILayout.Label ("Distance from landing site: " +
-						Math.Round(rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location), 1));
-					GUILayout.Label ("Potential: " + rover.scienceSpot.potentialString);
+                    }
+                    else
+                    {
+                        GUILayout.Label("[SCIENCE SPOT REACHED]");
+                        GUILayout.Label("Total dist. traveled for this spot: " + Math.Round(rover.distanceTraveledTotal, 1));
+                        GUILayout.Label("Distance from landing site: " +
+                            Math.Round(rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location), 1));
+                        GUILayout.Label("Potential: " + rover.scienceSpot.potentialString);
 
-					GUILayout.Label ("");
+                        GUILayout.Label("");
 
-					GUILayout.Label ("NOTE: The more you analyze, the less you will get each time!");
-				}
+                        GUILayout.Label("NOTE: The more you analyze, the less you will get each time!");
+                    }
 
-			}
+                }
+            }
 
 			GUILayout.EndScrollView ();
 			GUILayout.EndVertical ();
@@ -91,7 +147,7 @@ namespace RoverScience
 
 			if (GUILayout.Button ("Reset Science Site")) {
 				rover.scienceSpot.established = false;
-				rover.resetDistanceTravelled ();
+				rover.resetDistanceTraveled ();
 				consolePrintOut.Clear ();
 
 			}
@@ -105,7 +161,7 @@ namespace RoverScience
 
 			if (GUILayout.Button ("Close and Shutdown")) {
 				rover.scienceSpot.established = false;
-				rover.resetDistanceTravelled ();
+				rover.resetDistanceTraveled ();
 				consolePrintOut.Clear ();
 
 				consoleGUI.hide ();

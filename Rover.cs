@@ -26,9 +26,9 @@ namespace RoverScience
 		public LandingSpot landingSpot;
 
 		public COORDS location = new COORDS ();
-		public double distanceTravelled = 0;
+		public double distanceTraveled = 0;
 		public double distanceCheck = 20;
-		public double distanceTravelledTotal = 0;
+		public double distanceTraveledTotal = 0;
 
         public int minRadius = 25;
         public int maxRadius = 75;
@@ -96,6 +96,14 @@ namespace RoverScience
 			}
 		}
 
+        public int numberWheels
+        {
+            get
+            {
+                return getWheelCount();
+            }
+        }
+
         public bool validStatus
         {
             get
@@ -104,10 +112,10 @@ namespace RoverScience
             }
         }
 
-		public void calculateDistanceTravelled(double deltaTime)
+		public void calculateDistanceTraveled(double deltaTime)
 		{
-			distanceTravelled += (roverScience.vessel.srfSpeed) * deltaTime;
-            if (!scienceSpot.established) distanceTravelledTotal += (roverScience.vessel.srfSpeed) * deltaTime;
+			distanceTraveled += (roverScience.vessel.srfSpeed) * deltaTime;
+            if (!scienceSpot.established) distanceTraveledTotal += (roverScience.vessel.srfSpeed) * deltaTime;
 		}
 
         public void setRoverLocation()
@@ -154,14 +162,14 @@ namespace RoverScience
 			return (bearing + 360) % 360;
 		}
 
-		public void resetDistanceTravelled()
+		public void resetDistanceTraveled()
 		{
-			distanceTravelled = 0;
+			distanceTraveled = 0;
 		}
 
         private bool checkRoverValidStatus()
         {
-            // Checks if rover is landed with at least one wheel on no time-warp.
+            // Checks if rover is landed with at least one wheel on with no time-warp.
             return ((TimeWarp.CurrentRate == 1) && (vessel.horizontalSrfSpeed > (double)0.01) && (numberWheelsLanded > 0));
         }
 

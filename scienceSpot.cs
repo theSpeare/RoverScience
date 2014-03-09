@@ -93,16 +93,16 @@ namespace RoverScience
 
 		}
 
-        // This handles what happens after the distance travelled passes the distance roll
+        // This handles what happens after the distance traveled passes the distance roll
         // If the roll is successful establish a science spot
 		public void checkAndSet()
         {
-            // Once distance travelled passes the random check distance
+            // Once distance traveled passes the random check distance
 
-            if (rover.distanceTravelled >= rover.distanceCheck)
+            if (rover.distanceTraveled >= rover.distanceCheck)
             {
 				
-                rover.resetDistanceTravelled();
+                rover.resetDistanceTraveled();
 
                 roverScienceGUI.addRandomConsoleJunk();
 
@@ -180,7 +180,7 @@ namespace RoverScience
 
 			this.generateScience();
 			
-            rover.distanceTravelledTotal = 0;
+            rover.distanceTraveledTotal = 0;
 
             Debug.Log("== setLocation() ==");
             Debug.Log("randomAngle: " + Math.Round(randomAngle, 4));
@@ -199,8 +199,8 @@ namespace RoverScience
 			location.longitude = 0;
 			location.latitude = 0;
 
-			rover.resetDistanceTravelled ();
-			rover.distanceTravelledTotal = 0;
+			rover.resetDistanceTraveled ();
+			rover.distanceTraveledTotal = 0;
 		}
 	}
 

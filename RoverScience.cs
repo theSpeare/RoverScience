@@ -126,9 +126,9 @@ namespace RoverScience
 			if (IsPrimary) {
 
 				if (roverScienceGUI.consoleGUI.isOpen) {
-					// Calculate rover travelled distance
+					// Calculate rover traveled distance
 					if (rover.validStatus)
-						rover.calculateDistanceTravelled (TimeWarp.deltaTime);
+						rover.calculateDistanceTraveled (TimeWarp.deltaTime);
 
 					rover.landingSpot.setSpot ();
 					if (rover.landingSpot.established)

@@ -56,7 +56,7 @@ namespace RoverScience
 	                    location.longitude = vessel.longitude;
                         location.latitude = vessel.latitude;
 
-	                    rover.resetDistanceTravelled();
+	                    rover.resetDistanceTraveled();
 
 	                    established = true;
 
@@ -67,7 +67,8 @@ namespace RoverScience
             else
             {
                 // RESET LANDING SITE
-                if ((rover.numberWheelsLanded == 0) && (vessel.heightFromTerrain > 10)) reset();
+                if ((rover.numberWheelsLanded == 0) && (vessel.heightFromTerrain > 10)) 
+                    reset();
 			}
         }
 
@@ -77,8 +78,8 @@ namespace RoverScience
             location.longitude = 0;
             location.latitude = 0;
 
-            rover.resetDistanceTravelled();
-            rover.distanceTravelledTotal = 0;
+            rover.resetDistanceTraveled();
+            rover.distanceTraveledTotal = 0;
             Debug.Log("Landing Spot reset!");
         }
     }
