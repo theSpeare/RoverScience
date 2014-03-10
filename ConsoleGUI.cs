@@ -131,41 +131,47 @@ namespace RoverScience
         {
             // This will calculate the closest angle to the destination, given a current heading.
             // Everything here will be in degrees, not radians
-            double difference = currentHeading - destination;
-            double absDifference = Math.Abs(difference);
-            double relative = (absDifference > 180) ? (360 - absDifference) : absDifference;
+           
+            // Shift destination angle to 000 bearing. Apply this shift to the currentHeading in the same direction.
+            double delDestAngle = 0;
+            double shiftedCurrentHeading = 0;
 
+            if (destination > 180) {
+                // Delta will be clockwise
+                delDestAngle = 360 - destination;
+                shiftedCurrentHeading = currentHeading + delDestAngle;
 
-            if (relative < 5)
-            {
+                if (shiftedCurrentHeading > 360) shiftedCurrentHeading -= 360;
+            } else {
+                // Delta will be anti-clockwise
+                delDestAngle = destination;
+                shiftedCurrentHeading = currentHeading - delDestAngle;
+
+                if (shiftedCurrentHeading < 0) shiftedCurrentHeading += 360;
+            }
+
+            double absShiftedCurrentHeading = Math.Abs(shiftedCurrentHeading);
+
+            if (absShiftedCurrentHeading < 3) {
                 return "DRIVE FORWARD";
             }
 
-            if (relative > 175)
-            {
-                return "U-TURN";
+            if ((absShiftedCurrentHeading > 175) && (absShiftedCurrentHeading < 185)) {
+                return "TURN AROUND";
             }
 
-            double shiftDestAngle = (destination > 180) ? (360 - destination) : destination;
-            double shiftCurrHead = (currentHeading > 180) ? (destination + shiftDestAngle) : (destination - shiftDestAngle);
-
-            if (shiftCurrHead > 360)
-            {
-                shiftCurrHead -= 360;
-            }
-            else if (shiftCurrHead < 0)
-            {
-                shiftCurrHead = (360 - shiftCurrHead);
-            }
-
-            if (shiftCurrHead < 180)
-            {
+            if (absShiftedCurrentHeading > 0) {
                 return "TURN LEFT";
             }
-            else
-            {
+
+            if (absShiftedCurrentHeading < 0) {
                 return "TURN RIGHT";
             }
+
+
+
+            return "ERROR: FAILED TO RESOLVE DRIVE DIRECTION";
+
         }
 
 
