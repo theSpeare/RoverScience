@@ -11,42 +11,7 @@ namespace RoverScience
 	{
 
         private bool analyzeButtonPressedOnce = false;
-
-        private string stringDriveDirection(double destination, double currentHeading)
-        {
-            // This will calculate the closest angle to the destination, given a current heading.
-            // Everything here will be in degrees, not radians
-
-            double difference = currentHeading - destination;
-            double absDifference = Math.Abs(difference);
-            double relative = (absDifference > 180) ? (360 - absDifference) : absDifference;
-
-
-            if (relative < 5)
-            {
-                return "DRIVE FORWARD";
-            }
-
-            if (relative > 175)
-            {
-                return "U-TURN";
-            }
-
-            // PROBLEM!
-
-
-            //double reference = (destination + 180);
-            //reference = (reference > 360) ? (reference - 360) : reference;
-
-            //if ((currentHeading > destination) && (currentHeading > reference))
-            //{
-            //    return "TURN LEFT";
-            //}
-            
-
-            return "ERROR - Can't resolve DriveDirection";
-        }
-
+       
 		private void drawRoverConsoleGUI (int windowID)
 		{
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
@@ -84,18 +49,8 @@ namespace RoverScience
                         GUILayout.Label("Bearing of Site (degrees): " + Math.Round(rover.bearingToScienceSpot, 1));
                         GUILayout.Label("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
                         GUILayout.Label("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
-
-                        // PRINT DIRECTION TO DRIVE IN
-                        if (Math.Abs(relativeBearing) < 5) {
-                            GUILayout.Label("STRAIGHT");
-                        } else if (rover.heading > rover.bearingToScienceSpot)
-                        {
-                            GUILayout.Label("TURN LEFT");
-                        }
-                        else
-                        {
-                            GUILayout.Label("TURN RIGHT");
-                        }
+                        GUIBreakline();
+                        GUILayout.Label(getDriveDirection(rover.bearingToScienceSpot, rover.heading));
 
                     }
                     else
@@ -170,6 +125,50 @@ namespace RoverScience
 
 			GUI.DragWindow ();
 		}
+
+
+        private string getDriveDirection(double destination, double currentHeading)
+        {
+            // This will calculate the closest angle to the destination, given a current heading.
+            // Everything here will be in degrees, not radians
+            double difference = currentHeading - destination;
+            double absDifference = Math.Abs(difference);
+            double relative = (absDifference > 180) ? (360 - absDifference) : absDifference;
+
+
+            if (relative < 5)
+            {
+                return "DRIVE FORWARD";
+            }
+
+            if (relative > 175)
+            {
+                return "U-TURN";
+            }
+
+            double shiftDestAngle = (destination > 180) ? (360 - destination) : destination;
+            double shiftCurrHead = (currentHeading > 180) ? (destination + shiftDestAngle) : (destination - shiftDestAngle);
+
+            if (shiftCurrHead > 360)
+            {
+                shiftCurrHead -= 360;
+            }
+            else if (shiftCurrHead < 0)
+            {
+                shiftCurrHead = (360 - shiftCurrHead);
+            }
+
+            if (shiftCurrHead < 180)
+            {
+                return "TURN LEFT";
+            }
+            else
+            {
+                return "TURN RIGHT";
+            }
+        }
+
+
 	}
 
 

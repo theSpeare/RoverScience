@@ -60,36 +60,36 @@ namespace RoverScience
 		public void generateScience()
 		{
 			Debug.Log ("generateScience()");
-			if (rand.Next (0, 100) < 2) {
+			if (rand.Next (0, 100) < 1) {
 				potentialString = "Very High! [4]";
-				potentialScience = rand.Next (400, 700);
+				potentialScience = rand.Next (400, 500);
 				Debug.Log ("vhigh");
 				return;
 			} 
 
-			if (rand.Next (0, 100) < 14) {
+			if (rand.Next (0, 100) < 8) {
 				potentialString = "High! [3]";
-				potentialScience = rand.Next (150, 400);
+				potentialScience = rand.Next (200, 400);
 				Debug.Log ("high");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 45) {
 				potentialString = "Normal [2]" ;
-				potentialScience = rand.Next (70, 150);
+				potentialScience = rand.Next (70, 200);
 				Debug.Log ("normal");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 70) {
 				potentialString = "Low [1]";
-				potentialScience = rand.Next (20, 70);
+				potentialScience = rand.Next (30, 70);
 				Debug.Log ("low");
 				return;
 			}
 				
 			potentialString = "Very Low! [0]";
-			potentialScience = rand.Next (0, 10);
+			potentialScience = rand.Next (0, 30);
 
 		}
 
