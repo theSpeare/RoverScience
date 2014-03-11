@@ -35,7 +35,8 @@ namespace RoverScience
 
                     GUILayout.Label("Drive around to search for science spots . . .");
                     GUILayout.Label("Total dist. traveled searching for this spot: " + Math.Round(rover.distanceTraveledTotal, 2));
-                    foreach (string line in consolePrintOut)
+					GUIBreakline ();
+					foreach (string line in consolePrintOut)
                     {
                         GUILayout.Label(line);
                     }
@@ -152,19 +153,19 @@ namespace RoverScience
 
             double absShiftedCurrentHeading = Math.Abs(shiftedCurrentHeading);
 
-            if (absShiftedCurrentHeading < 3) {
+			if (absShiftedCurrentHeading < 6) {
                 return "DRIVE FORWARD";
             }
 
-            if ((absShiftedCurrentHeading > 175) && (absShiftedCurrentHeading < 185)) {
+			if ((absShiftedCurrentHeading > 174) && (absShiftedCurrentHeading < 186)) {
                 return "TURN AROUND";
             }
 
-            if (absShiftedCurrentHeading > 0) {
+			if (absShiftedCurrentHeading < 180) {
                 return "TURN LEFT";
             }
 
-            if (absShiftedCurrentHeading < 0) {
+			if (absShiftedCurrentHeading > 180) {
                 return "TURN RIGHT";
             }
 
