@@ -121,7 +121,7 @@ namespace RoverScience
                 double chanceAlgorithm = (7 * Math.Sqrt(dist));
 
 
-                double chance = (chanceAlgorithm < 90) ? chanceAlgorithm : 90;
+				double chance = (chanceAlgorithm < 75) ? chanceAlgorithm : 75;
 
                 Debug.Log ("rNum: " + rNum);
                 Debug.Log ("chance: " + chance);

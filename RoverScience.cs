@@ -15,7 +15,7 @@ namespace RoverScience
 	public class RoverScience : PartModule
 	{
 		// Not necessarily updated per build. Mostly updated per major commits
-		public readonly string RSVersion = "PRE-RELEASE 2";
+		public readonly string RSVersion = "PRE-RELEASE 3.1";
 		public static RoverScience Instance = null;
 		public System.Random rand = new System.Random ();
 		public ModuleScienceContainer container;
@@ -164,13 +164,16 @@ namespace RoverScience
 				Debug.Log ("scienceDecayScalar: " + scienceDecayScalar);
 				Debug.Log ("bodyScienceScalar: " + bodyScienceScalar);
 
-				if (StoreScience (container, sciSubject, sciData)) {
-					container.ReviewData ();
+				if (sciData > 0.1) {
+					if (StoreScience (container, sciSubject, sciData)) {
+						container.ReviewData ();
+						Debug.Log ("Science retrieved! - " + sciData);
+					} else {
+						Debug.Log ("Failed to add science to container!");
+					}
 				} else {
-					Debug.Log ("Failed to add science to container!");
+					ScreenMessages.PostScreenMessage ("Science value was too low - deleting data!", 5, ScreenMessageStyle.UPPER_CENTER);
 				}
-
-				Debug.Log ("Science retrieved! - " + sciData);
 
 				amountOfTimesAnalyzed++;
 				rover.scienceSpot.reset ();

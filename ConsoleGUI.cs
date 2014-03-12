@@ -41,6 +41,10 @@ namespace RoverScience
                         GUILayout.Label(line);
                     }
 
+					if (vessel.mainBody.bodyName == "Kerbin") {
+						GUILayout.Label ("Warning - there is very little rover science for Kerbin!");
+					}
+
                 } else {
                     if (!rover.scienceSpotReached)
                     {

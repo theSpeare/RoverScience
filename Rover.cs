@@ -30,8 +30,8 @@ namespace RoverScience
 		public double distanceCheck = 20;
 		public double distanceTraveledTotal = 0;
 
-        public int minRadius = 25;
-        public int maxRadius = 75;
+		public int minRadius = 40;
+		public int maxRadius = 90;
 
 		public double distanceFromLandingSpot
 		{
