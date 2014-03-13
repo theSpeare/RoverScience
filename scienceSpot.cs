@@ -74,7 +74,7 @@ namespace RoverScience
 				return;
 			} 
 
-			if (rand.Next (0, 100) < 45) {
+			if (rand.Next (0, 100) < 65) {
 				potentialString = "Normal [2]" ;
 				potentialScience = rand.Next (70, 200);
 				Debug.Log ("normal");
