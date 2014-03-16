@@ -17,6 +17,8 @@ namespace RoverScience
 		public int potentialScience;
         public int randomRadius = 0;
 
+        
+
 		public string potentialString;
 		public bool established = false;
 		RoverScience roverScience = null;
@@ -179,7 +181,7 @@ namespace RoverScience
             established = true;
 
 			this.generateScience();
-			
+			// call method for prediction here
             rover.distanceTraveledTotal = 0;
 
             Debug.Log("== setLocation() ==");

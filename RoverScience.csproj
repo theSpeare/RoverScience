@@ -48,6 +48,7 @@
     <Compile Include="GUIClasses.cs" />
     <Compile Include="RandomConsolePrints.cs" />
     <Compile Include="ConsoleGUI.cs" />
+    <Compile Include="RSUpgrades.cs" />
     <Compile Include="ScienceSpot.cs" />
     <Compile Include="DebugGUI.cs" />
   </ItemGroup>

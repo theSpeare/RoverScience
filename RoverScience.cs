@@ -21,7 +21,11 @@ namespace RoverScience
 		public ModuleScienceContainer container;
 		public ModuleCommand command;
 		public Rover rover;
-		public RoverScienceGUI roverScienceGUI = new RoverScienceGUI ();
+
+        public RSUpgrades upgrades = new RSUpgrades();
+        
+
+		public RoverScienceGUI roverScienceGUI;
 		public double distCounter;
 		[KSPField (isPersistant = true)]
 		public int amountOfTimesAnalyzed = 0;
@@ -112,6 +116,7 @@ namespace RoverScience
 	
 					// Must be called here otherwise they won't run their constructors for some reason
 					rover = new Rover ();
+                    roverScienceGUI = new RoverScienceGUI (Instance, upgrades);
 					rover.scienceSpot = new ScienceSpot (Instance);
 					rover.landingSpot = new LandingSpot (Instance);
 				} else {
@@ -236,8 +241,8 @@ namespace RoverScience
 				return 1;
 			}
 		}
-
-		private float getBodyScienceCap (string currentBodyName)
+       
+        private float getBodyScienceCap (string currentBodyName)
 		{
 			float scalar = 1;
 			float scienceCap = 1500;
@@ -263,7 +268,8 @@ namespace RoverScience
 			return (scalar * scienceCap);
 		}
 
-		public void keyboardShortcuts ()
+
+        public void keyboardShortcuts ()
 		{
 
 			if (HighLogic.LoadedSceneIsFlight) {
