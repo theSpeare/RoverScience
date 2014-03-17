@@ -20,14 +20,23 @@ namespace RoverScience
 			GUILayout.Label ("distTravTotal: " + Math.Round(rover.distanceTraveledTotal));
 			GUIBreakline ();
 			GUILayout.Label ("currentScalarDecay: " + roverScience.scienceDecayScalar);
+			//GUILayout.Label ("scienceDistanceScalarBoost: " + roverScience.scienceDistanceScalarBoost);
+
+			GUILayout.Label ("ScienceSpot potential: " + rover.scienceSpot.potentialString);
+
 			GUILayout.Label ("generatedScience: " + rover.scienceSpot.potentialScience);
 			GUILayout.Label ("with decay: " + rover.scienceSpot.potentialScience * roverScience.scienceDecayScalar);
+			//GUILayout.Label ("with distanceScalarBoost & decay & bodyScalar: " + rover.scienceSpot.potentialScience * 
+			//roverScience.scienceDecayScalar * roverScience.scienceDistanceScalarBoost * roverScience.bodyScienceScalar);
+
+
+
 
 			if (GUILayout.Button ("Find Science Spot")) {
-				rover.scienceSpot.setLocation (rover.minRadius,rover.maxRadius);
+				rover.scienceSpot.setLocation (rover.minRadius, rover.maxRadius);
 			}
-				
-				
+
+
 			if (GUILayout.Button ("Cheat Spot Here")) {
 				if ((!rover.scienceSpot.established) && (consoleGUI.isOpen)) {
 					rover.scienceSpot.setLocation (0, 1);
@@ -60,11 +69,50 @@ namespace RoverScience
 			GUILayout.EndHorizontal ();
 
 			GUIBreakline ();
+			GUIBreakline ();
 
+
+			GUILayout.Label("Dist. Upgraded Level: " + roverScience.levelMaxDistance);
+
+			GUILayout.BeginHorizontal ();
+			if (GUILayout.Button ("-")) {
+				if (roverScience.levelMaxDistance > 1)
+					roverScience.levelMaxDistance--;
+			}
+
+			if (GUILayout.Button ("+")) {
+				roverScience.levelMaxDistance++;
+			}
+
+			if (GUILayout.Button("0")){
+				roverScience.levelMaxDistance = 0;
+			}
+			GUILayout.EndHorizontal ();
+
+
+
+			GUILayout.Label("Acc. Upgraded Level: " + roverScience.levelDetectionAccuracy);
+
+			GUILayout.BeginHorizontal ();
+			if (GUILayout.Button ("-")) {
+				if (roverScience.levelDetectionAccuracy > 1)
+					roverScience.levelDetectionAccuracy--;
+			}
+
+			if (GUILayout.Button ("+")) {
+				roverScience.levelDetectionAccuracy++;
+			}
+
+			if (GUILayout.Button("0")){
+				roverScience.levelDetectionAccuracy = 0;
+			}
+			GUILayout.EndHorizontal ();
+
+			GUIBreakline ();
 			if (GUILayout.Button ("Close Window")) {
 				debugGUI.hide ();
 			}
-				
+
 			GUILayout.EndVertical ();
 
 			GUI.DragWindow ();

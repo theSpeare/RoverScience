@@ -22,10 +22,15 @@ namespace RoverScience
 		public ModuleCommand command;
 		public Rover rover;
 
-        public RSUpgrades upgrades = new RSUpgrades();
-        
+		public int levelMaxDistance = 1;
+		public int levelDetectionAccuracy = 1;
 
-		public RoverScienceGUI roverScienceGUI;
+		private static string saveGame = HighLogic.SaveFolder;
+		private static string fileName = KSPUtil.ApplicationRootPath + "saves/" + saveGame + "/" + "RS" + ".save";
+
+		ConfigNode currentSave;
+
+		public RoverScienceGUI roverScienceGUI = new RoverScienceGUI();
 		public double distCounter;
 		[KSPField (isPersistant = true)]
 		public int amountOfTimesAnalyzed = 0;
@@ -82,6 +87,12 @@ namespace RoverScience
 		public override void OnLoad (ConfigNode vesselNode)
 		{
 			try {
+
+				saveGame = HighLogic.SaveFolder;
+				fileName = KSPUtil.ApplicationRootPath + "saves/" + saveGame + "/" + "RS" + ".save";
+				Debug.Log ("ONLOAD HAS ATTEMPTED TO LOAD FROM THIS PATH: " + fileName);
+				Debug.Log ("ONLOAD - saveGame: " + saveGame);
+
 				if ((HighLogic.LoadedSceneIsFlight) && (FlightGlobals.ActiveVessel != null)) {
 					if (vesselNode.HasValue ("amountOfTimesAnalyzed")) {
 						amountOfTimesAnalyzed = Convert.ToInt32 (vesselNode.GetValue ("amountOfTimesAnalyzed"));
@@ -92,10 +103,19 @@ namespace RoverScience
 						Debug.Log ("No node found for analyzeDelayCheck");
 						Debug.Log ("analyzeDelayCheck is now: " + amountOfTimesAnalyzed);
 					}
+
+					if (!loadUpgrades()) Debug.Log ("#RS - failed to loadUpgrades");
 				}
 			} catch {
+				Debug.Log ("RoverScience OnLoad() Catch: SCENE: " + HighLogic.LoadedScene);
 			}
 
+		}
+
+		public override void OnSave (ConfigNode node)
+		{
+			if (!saveUpgrades ()) 
+				Debug.Log ("#RS - failed to saveUpgrades!");
 		}
 
 		public override void OnStart (PartModule.StartState state)
@@ -116,7 +136,6 @@ namespace RoverScience
 	
 					// Must be called here otherwise they won't run their constructors for some reason
 					rover = new Rover ();
-                    roverScienceGUI = new RoverScienceGUI (Instance, upgrades);
 					rover.scienceSpot = new ScienceSpot (Instance);
 					rover.landingSpot = new LandingSpot (Instance);
 				} else {
@@ -268,6 +287,111 @@ namespace RoverScience
 			return (scalar * scienceCap);
 		}
 
+
+		public bool loadUpgrades ()
+		{
+			if (!HighLogic.LoadedSceneIsFlight)
+				return false;
+
+			currentSave = ConfigNode.Load (fileName);
+
+			try {
+				if ((currentSave == null) || (!(currentSave.HasNode ("RoverScience")))) {
+					Debug.LogError ("#Save file was empty. Should be creating new ConfigNode");
+					currentSave = new ConfigNode ();
+					currentSave.AddNode ("RoverScience");
+				} else {
+					Debug.Log ("#Save file was found - loading...");
+				}
+
+				ConfigNode mainNode = currentSave.GetNode ("RoverScience");
+
+				if (mainNode.HasValue ("levelMaxDistance")) {
+					levelMaxDistance = Convert.ToInt32 (mainNode.GetValue ("levelMaxDistance"));
+				} else {
+					mainNode.AddValue ("levelMaxDistance", levelMaxDistance);
+				}
+
+				if (mainNode.HasValue ("levelDetectionAccuracy")) {
+					levelDetectionAccuracy = Convert.ToInt32 (mainNode.GetValue ("levelDetectionAccuracy"));
+				} else {
+					mainNode.AddValue ("levelDetectionAccuracy", levelDetectionAccuracy);
+				}
+
+
+				saveUpgrades ();
+				return true;
+			} catch {
+				return false;
+			}
+
+		}
+
+		public bool saveUpgrades ()
+		{
+			try{
+				ConfigNode mainNode = currentSave.GetNode ("RoverScience");
+				mainNode.SetValue ("levelMaxDistance", levelMaxDistance.ToString());
+				mainNode.SetValue ("levelDetectionAccuracy", levelDetectionAccuracy.ToString());
+				currentSave.Save (fileName);
+				return true;
+			} catch {
+				return false;
+			}
+		}
+
+		public static float getUpgradeCost(RSUpgrade upgrade, int level)
+		{
+			switch (upgrade)
+			{
+			case (RSUpgrade.maxDistance):
+				if (level == 1) return 1000;
+				if (level == 2) return 2000;
+				if (level == 3) return 3000;
+				if (level == 4) return 4000;
+				if (level == 5) return 5000;
+
+				return -1;
+			case (RSUpgrade.predictionAccuracy):
+
+				if (level == 1) return 1000;
+				if (level == 2) return 2000;
+				if (level == 3) return 3000;
+				if (level == 4) return 4000;
+
+				return -1;
+			default:
+				return -1;
+			}
+		}
+
+		public static double getUpgradeValue(RSUpgrade upgrade, int level)
+		{
+
+			if (level == 0) level = 1;
+
+			switch (upgrade)
+			{
+			case (RSUpgrade.maxDistance):
+				if (level == 1) return 100;
+				if (level == 2) return 500;
+				if (level == 3) return 1000;
+				if (level == 4) return 2000;
+				if (level == 5) return 4000;
+
+				return -1;
+			case (RSUpgrade.predictionAccuracy):
+
+				if (level == 1) return 0.2;
+				if (level == 2) return 0.5;
+				if (level == 3) return 0.7;
+				if (level == 4) return 0.8;
+
+				return -1;
+			default:
+				return -1;
+			}
+		}
 
         public void keyboardShortcuts ()
 		{

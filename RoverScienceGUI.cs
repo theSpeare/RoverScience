@@ -24,9 +24,14 @@ namespace RoverScience
 
 		private List<string> consolePrintOut = new List<string>();
 
-        private RoverScience roverScience;
+        private RoverScience roverScience
+		{
+			get{
+				return RoverScience.Instance;
+			}
 
-        private RSUpgrades upgrades;
+		}
+       
 
 		private Vessel vessel
 		{
@@ -42,11 +47,8 @@ namespace RoverScience
 			}
 		}
 
-		public RoverScienceGUI(RoverScience roverScience, RSUpgrades upgrades)
+		public RoverScienceGUI()
 		{
-            this.roverScience = roverScience;
-            this.upgrades = upgrades;
-
 			Debug.Log ("RoverScienceGUI started");
 			consoleGUI.rect.width = 250;
 			debugGUI.rect.width = 230;
