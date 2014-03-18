@@ -48,6 +48,8 @@ namespace RoverScience
 
 		}
 
+        public float scienceMaxRadiusBoost = 1;
+
 		public float scienceDecayScalar {
 			get {
 				return getScienceDecayScalar (amountOfTimesAnalyzed);
@@ -340,7 +342,7 @@ namespace RoverScience
 			}
 		}
 
-		public static float getUpgradeCost(RSUpgrade upgrade, int level)
+		public float getUpgradeCost(RSUpgrade upgrade, int level)
 		{
 			switch (upgrade)
 			{
@@ -365,7 +367,7 @@ namespace RoverScience
 			}
 		}
 
-		public static double getUpgradeValue(RSUpgrade upgrade, int level)
+		public double getUpgradeValue(RSUpgrade upgrade, int level)
 		{
 
 			if (level == 0) level = 1;
@@ -380,18 +382,60 @@ namespace RoverScience
 				if (level == 5) return 4000;
 
 				return -1;
-			case (RSUpgrade.predictionAccuracy):
 
-				if (level == 1) return 0.2;
-				if (level == 2) return 0.5;
-				if (level == 3) return 0.7;
-				if (level == 4) return 0.8;
+			case (RSUpgrade.predictionAccuracy):
+                if (level == 1) return 0;
+                if (level == 2) return 0.2;
+				if (level == 3) return 0.5;
+				if (level == 4) return 0.7;
+				if (level == 5) return 0.8;
 
 				return -1;
+
 			default:
 				return -1;
 			}
 		}
+
+        public bool upgradeTech(RSUpgrade upgrade)
+        {
+            int maximum_levelMaxDistance = 5;
+            int maximum_predictionAccuracy = 5;
+
+            
+            switch (upgrade)
+            {
+                case (RSUpgrade.maxDistance):
+                    if (levelMaxDistance == maximum_levelMaxDistance) return false;
+
+                    levelMaxDistance++;
+                    //getUpgradeCost
+
+                    return true;
+
+
+                case (RSUpgrade.predictionAccuracy):
+
+                    return true;
+
+
+                default:
+                    
+                    return false;
+
+
+            }
+        }
+
+        public void setScienceMaxRadiusBoost(int maxRadius)
+        {
+            //maxRadius' maximum value would only ever reach 2km (2000 meters)
+
+            if (maxRadius < 150)
+                scienceMaxRadiusBoost = 1;
+
+            scienceMaxRadiusBoost = (0.5f / 2000f) + 1f;
+        }
 
         public void keyboardShortcuts ()
 		{

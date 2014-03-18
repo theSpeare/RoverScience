@@ -161,6 +161,8 @@ namespace RoverScience
         {
             // generate random radius for where to spot placement
             randomRadius = rand.Next(minRadius, maxRadius);
+            roverScience.setScienceMaxRadiusBoost(randomRadius);
+
 
             double bodyRadius = vessel.mainBody.Radius;
             double randomAngle = rand.NextDouble() * (double)(1.9);
