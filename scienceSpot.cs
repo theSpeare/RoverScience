@@ -18,8 +18,12 @@ namespace RoverScience
         public int randomRadius = 0;
 
         
+        // The spot's actual potential name
+		public string potentialGenerated = "";
 
-		public string potentialString;
+        // This is what will be shown as the prediction
+        public string predictedSpot = "";
+
 		public bool established = false;
 		RoverScience roverScience = null;
 
@@ -59,38 +63,59 @@ namespace RoverScience
 
         }
 
+        public enum potentials
+        {
+            vhigh, high, normal, low, vlow
+        }
+
+        private string[] potentialStrings = new string[]{"Very High!", "High", "Normal", "Low", "Very Low!"};
+
+        public string getPotentialString(potentials potential)
+        {
+            switch (potential)
+            {
+                case (potentials.vhigh):
+                    return potentialStrings[0];
+                case (potentials.high):
+                    return potentialStrings[1];
+                case (potentials.normal):
+                    return potentialStrings[2];
+                case (potentials.low):
+                    return potentialStrings[3];
+                case (potentials.vlow):
+                    return potentialStrings[4];
+            }
+            return "Potential string unresolved";
+        }
+
 		public void generateScience()
 		{
 			Debug.Log ("generateScience()");
 			if (rand.Next (0, 100) < 1) {
-				potentialString = "Very High! [4]";
+                potentialGenerated = getPotentialString (potentials.vhigh);
 				potentialScience = rand.Next (400, 500);
-				Debug.Log ("vhigh");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 8) {
-				potentialString = "High! [3]";
+                potentialGenerated = getPotentialString(potentials.high);
 				potentialScience = rand.Next (200, 400);
-				Debug.Log ("high");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 65) {
-				potentialString = "Normal [2]" ;
+                potentialGenerated = getPotentialString(potentials.normal);
 				potentialScience = rand.Next (70, 200);
-				Debug.Log ("normal");
 				return;
 			} 
 
 			if (rand.Next (0, 100) < 70) {
-				potentialString = "Low [1]";
+                potentialGenerated = getPotentialString(potentials.low);
 				potentialScience = rand.Next (30, 70);
-				Debug.Log ("low");
 				return;
 			}
-				
-			potentialString = "Very Low! [0]";
+
+            potentialGenerated = getPotentialString(potentials.vlow);
 			potentialScience = rand.Next (0, 30);
 
 		}
@@ -183,7 +208,7 @@ namespace RoverScience
             established = true;
 
 			this.generateScience();
-			// call method for prediction here
+            predictSpot();
             rover.distanceTraveledTotal = 0;
 
             Debug.Log("== setLocation() ==");
@@ -194,6 +219,26 @@ namespace RoverScience
             Debug.Log("randomRadius selected: " + randomRadius);
             Debug.Log("distance to ScienceSpot: " + rover.distanceFromScienceSpot);
             Debug.Log("==================");
+        }
+
+        
+
+        public void predictSpot()
+        {
+            double predictionAccuracyChance = roverScience.currentDetectionAccuracy;
+
+            int rNum = rand.Next(0, 100);
+
+            if (rNum < predictionAccuracyChance)
+            {
+                predictedSpot = potentialGenerated;
+            }
+            else
+            {
+                // Select a random one
+                predictedSpot = potentialStrings[rand.Next(0, potentialStrings.Length)];
+            }
+            Debug.Log("Spot prediction attempted!");
         }
 
 		public void reset()

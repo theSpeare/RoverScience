@@ -11,7 +11,8 @@ namespace RoverScience
 	{
 
         private bool analyzeButtonPressedOnce = false;
-       
+        private string inputMaxDistance = "";
+
 		private void drawRoverConsoleGUI (int windowID)
 		{
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
@@ -56,6 +57,8 @@ namespace RoverScience
                         GUILayout.Label("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
                         GUIBreakline();
                         GUILayout.Label(getDriveDirection(rover.bearingToScienceSpot, rover.heading));
+                        GUIBreakline();
+                        GUILayout.Label("PREDICTION: " + rover.scienceSpot.predictedSpot + " (" + roverScience.currentDetectionAccuracy + "% chance of correct prediction)");
 
                     }
                     else
@@ -64,7 +67,7 @@ namespace RoverScience
                         GUILayout.Label("Total dist. traveled for this spot: " + Math.Round(rover.distanceTraveledTotal, 1));
                         GUILayout.Label("Distance from landing site: " +
                             Math.Round(rover.getDistanceBetweenTwoPoints(rover.scienceSpot.location, rover.landingSpot.location), 1));
-                        GUILayout.Label("Potential: " + rover.scienceSpot.potentialString);
+                        GUILayout.Label("Potential: " + rover.scienceSpot.potentialGenerated);
 
                         GUILayout.Label("");
 
@@ -115,10 +118,27 @@ namespace RoverScience
 			if (GUILayout.Button ("Reorient from Part")) {
 				roverScience.command.MakeReference ();
 			}
-			
-			GUILayout.BeginHorizontal();
-			GUILayout.EndHorizontal();
+            GUIBreakline();
+            GUILayout.BeginHorizontal();
+            inputMaxDistance = GUILayout.TextField(inputMaxDistance, new GUILayoutOption[] { GUILayout.Width(50) });
+            
+            
+            if (GUILayout.Button("Set Max Range (M: " + roverScience.currentMaxDistance + ")")){
 
+                int inputMaxDistanceInt;
+                bool isNumber = int.TryParse(inputMaxDistance, out inputMaxDistanceInt);
+
+
+                if ((isNumber) && (inputMaxDistanceInt <= roverScience.currentMaxDistance))
+                {
+                    rover.maxRadius = inputMaxDistanceInt;
+                }
+            }
+
+            GUILayout.EndHorizontal();
+
+            GUIBreakline();
+            GUIBreakline();
 			if (GUILayout.Button ("Close and Shutdown")) {
 				rover.scienceSpot.established = false;
 				rover.resetDistanceTraveled ();

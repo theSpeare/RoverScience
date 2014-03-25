@@ -22,7 +22,7 @@ namespace RoverScience
 			GUILayout.Label ("currentScalarDecay: " + roverScience.scienceDecayScalar);
 			//GUILayout.Label ("scienceDistanceScalarBoost: " + roverScience.scienceDistanceScalarBoost);
 
-			GUILayout.Label ("ScienceSpot potential: " + rover.scienceSpot.potentialString);
+			GUILayout.Label ("ScienceSpot potential: " + rover.scienceSpot.potentialGenerated);
 
 			GUILayout.Label ("generatedScience: " + rover.scienceSpot.potentialScience);
 			GUILayout.Label ("with decay: " + rover.scienceSpot.potentialScience * roverScience.scienceDecayScalar);

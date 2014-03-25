@@ -25,6 +25,22 @@ namespace RoverScience
 		public int levelMaxDistance = 1;
 		public int levelDetectionAccuracy = 1;
 
+        public float currentDetectionAccuracy
+        {
+            get
+            {
+                return getUpgradeCost(RSUpgrade.predictionAccuracy, levelDetectionAccuracy);
+            }
+        }
+
+        public float currentMaxDistance
+        {
+            get
+            {
+                return getUpgradeCost(RSUpgrade.maxDistance, levelMaxDistance);
+            }
+        }
+
 		private static string saveGame = HighLogic.SaveFolder;
 		private static string fileName = KSPUtil.ApplicationRootPath + "saves/" + saveGame + "/" + "RS" + ".save";
 
@@ -106,6 +122,7 @@ namespace RoverScience
 						Debug.Log ("analyzeDelayCheck is now: " + amountOfTimesAnalyzed);
 					}
 
+                    // LOAD UPGRADES HERE
 					if (!loadUpgrades()) Debug.Log ("#RS - failed to loadUpgrades");
 				}
 			} catch {
@@ -116,8 +133,8 @@ namespace RoverScience
 
 		public override void OnSave (ConfigNode node)
 		{
-			if (!saveUpgrades ()) 
-				Debug.Log ("#RS - failed to saveUpgrades!");
+            // SAVE UPGRADES HERE
+			if (!saveUpgrades ()) Debug.Log ("#RS - failed to saveUpgrades!");
 		}
 
 		public override void OnStart (PartModule.StartState state)
@@ -245,6 +262,7 @@ namespace RoverScience
 
 			return (float)scalar;
 		}
+
 
 
 		private float getBodyScienceScalar (string currentBodyName)
@@ -385,10 +403,10 @@ namespace RoverScience
 
 			case (RSUpgrade.predictionAccuracy):
                 if (level == 1) return 0;
-                if (level == 2) return 0.2;
-				if (level == 3) return 0.5;
-				if (level == 4) return 0.7;
-				if (level == 5) return 0.8;
+                if (level == 2) return 20;
+				if (level == 3) return 50;
+				if (level == 4) return 70;
+				if (level == 5) return 80;
 
 				return -1;
 
@@ -409,13 +427,16 @@ namespace RoverScience
                     if (levelMaxDistance == maximum_levelMaxDistance) return false;
 
                     levelMaxDistance++;
-                    //getUpgradeCost
+                    //getUpgradeCost - chargecostetc
 
                     return true;
 
 
                 case (RSUpgrade.predictionAccuracy):
+                    if (levelDetectionAccuracy == maximum_predictionAccuracy) return false;
 
+                    levelDetectionAccuracy++;
+                    //getUpgradeCost - chargecostetc
                     return true;
 
 
