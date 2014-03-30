@@ -225,7 +225,7 @@ namespace RoverScience
 
         public void predictSpot()
         {
-            double predictionAccuracyChance = roverScience.currentDetectionAccuracy;
+            double predictionAccuracyChance = roverScience.currentPredictionAccuracy;
 
             int rNum = rand.Next(0, 100);
 

@@ -58,7 +58,7 @@ namespace RoverScience
                         GUIBreakline();
                         GUILayout.Label(getDriveDirection(rover.bearingToScienceSpot, rover.heading));
                         GUIBreakline();
-                        GUILayout.Label("PREDICTION: " + rover.scienceSpot.predictedSpot + " (" + roverScience.currentDetectionAccuracy + "% chance of correct prediction)");
+                        GUILayout.Label("PREDICTION: " + rover.scienceSpot.predictedSpot + " (" + roverScience.currentPredictionAccuracy + "% chance of correct prediction)");
 
                     }
                     else

@@ -14,6 +14,9 @@ Global
 		{65FCE581-3004-46CC-AEB5-EFB31A08A68D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65FCE581-3004-46CC-AEB5-EFB31A08A68D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = RoverScience.csproj
 	EndGlobalSection

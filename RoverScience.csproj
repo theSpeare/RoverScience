@@ -51,6 +51,7 @@
     <Compile Include="ScienceSpot.cs" />
     <Compile Include="DebugGUI.cs" />
     <Compile Include="RSUpgrade.cs" />
+    <Compile Include="UpgradeGUI.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

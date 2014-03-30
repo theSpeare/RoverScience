@@ -23,13 +23,13 @@ namespace RoverScience
 		public Rover rover;
 
 		public int levelMaxDistance = 1;
-		public int levelDetectionAccuracy = 1;
+		public int levelPredictionAccuracy = 1;
 
-        public float currentDetectionAccuracy
+        public float currentPredictionAccuracy
         {
             get
             {
-                return getUpgradeCost(RSUpgrade.predictionAccuracy, levelDetectionAccuracy);
+                return getUpgradeCost(RSUpgrade.predictionAccuracy, levelPredictionAccuracy);
             }
         }
 
@@ -333,9 +333,9 @@ namespace RoverScience
 				}
 
 				if (mainNode.HasValue ("levelDetectionAccuracy")) {
-					levelDetectionAccuracy = Convert.ToInt32 (mainNode.GetValue ("levelDetectionAccuracy"));
+					levelPredictionAccuracy = Convert.ToInt32 (mainNode.GetValue ("levelDetectionAccuracy"));
 				} else {
-					mainNode.AddValue ("levelDetectionAccuracy", levelDetectionAccuracy);
+					mainNode.AddValue ("levelDetectionAccuracy", levelPredictionAccuracy);
 				}
 
 
@@ -352,13 +352,28 @@ namespace RoverScience
 			try{
 				ConfigNode mainNode = currentSave.GetNode ("RoverScience");
 				mainNode.SetValue ("levelMaxDistance", levelMaxDistance.ToString());
-				mainNode.SetValue ("levelDetectionAccuracy", levelDetectionAccuracy.ToString());
+				mainNode.SetValue ("levelDetectionAccuracy", levelPredictionAccuracy.ToString());
 				currentSave.Save (fileName);
 				return true;
 			} catch {
 				return false;
 			}
 		}
+
+
+        public string getUpgradeName(RSUpgrade upgrade)
+        {
+            switch (upgrade)
+            {
+                case (RSUpgrade.maxDistance):
+                    return "Max. Scan Distance";
+                case (RSUpgrade.predictionAccuracy):
+                    return "Prediction Accuracy";
+                default:
+                    return "Failed to resolve getUpgradeName";
+            }
+
+        }
 
 		public float getUpgradeCost(RSUpgrade upgrade, int level)
 		{
@@ -415,6 +430,19 @@ namespace RoverScience
 			}
 		}
 
+        public int getUpgradeLevel(RSUpgrade upgrade)
+        {
+            switch (upgrade)
+            {
+                case (RSUpgrade.maxDistance):
+                    return levelMaxDistance;
+                case (RSUpgrade.predictionAccuracy):
+                    return levelPredictionAccuracy;
+                default:
+                    return -1;
+            }
+        }
+
         public bool upgradeTech(RSUpgrade upgrade)
         {
             int maximum_levelMaxDistance = 5;
@@ -425,18 +453,35 @@ namespace RoverScience
             {
                 case (RSUpgrade.maxDistance):
                     if (levelMaxDistance == maximum_levelMaxDistance) return false;
+                    if (getUpgradeCost(RSUpgrade.maxDistance, levelMaxDistance + 1) >
+                        ResearchAndDevelopment.Instance.Science) {
+
+                        ScreenMessages.PostScreenMessage("Not enough science to upgrade", 3, ScreenMessageStyle.UPPER_CENTER);
+                        return false;
+                    }
 
                     levelMaxDistance++;
-                    //getUpgradeCost - chargecostetc
+
+                    ResearchAndDevelopment.Instance.Science -= 
+                        getUpgradeCost(RSUpgrade.maxDistance, levelMaxDistance + 1);
 
                     return true;
 
 
                 case (RSUpgrade.predictionAccuracy):
-                    if (levelDetectionAccuracy == maximum_predictionAccuracy) return false;
+                    if (levelPredictionAccuracy == maximum_predictionAccuracy) return false;
+                    if (getUpgradeCost(RSUpgrade.predictionAccuracy, levelPredictionAccuracy + 1) >
+                        ResearchAndDevelopment.Instance.Science) {
 
-                    levelDetectionAccuracy++;
-                    //getUpgradeCost - chargecostetc
+                        ScreenMessages.PostScreenMessage("Not enough science to upgrade", 3, ScreenMessageStyle.UPPER_CENTER);
+                        return false;
+                    }
+
+                    levelPredictionAccuracy++;
+
+                    ResearchAndDevelopment.Instance.Science -=
+                          getUpgradeCost(RSUpgrade.predictionAccuracy, levelPredictionAccuracy + 1);
+
                     return true;
 
 

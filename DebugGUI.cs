@@ -91,20 +91,20 @@ namespace RoverScience
 
 
 
-			GUILayout.Label("Acc. Upgraded Level: " + roverScience.levelDetectionAccuracy);
+			GUILayout.Label("Acc. Upgraded Level: " + roverScience.levelPredictionAccuracy);
 
 			GUILayout.BeginHorizontal ();
 			if (GUILayout.Button ("-")) {
-				if (roverScience.levelDetectionAccuracy > 1)
-					roverScience.levelDetectionAccuracy--;
+				if (roverScience.levelPredictionAccuracy > 1)
+					roverScience.levelPredictionAccuracy--;
 			}
 
 			if (GUILayout.Button ("+")) {
-				roverScience.levelDetectionAccuracy++;
+				roverScience.levelPredictionAccuracy++;
 			}
 
 			if (GUILayout.Button("0")){
-				roverScience.levelDetectionAccuracy = 0;
+				roverScience.levelPredictionAccuracy = 0;
 			}
 			GUILayout.EndHorizontal ();
 
