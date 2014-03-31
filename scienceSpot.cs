@@ -16,13 +16,13 @@ namespace RoverScience
 
 		public int potentialScience;
         public int randomRadius = 0;
-
         
         // The spot's actual potential name
 		public string potentialGenerated = "";
 
         // This is what will be shown as the prediction
         public string predictedSpot = "";
+        private string[] potentialStrings = new string[] { "Very High!", "High", "Normal", "Low", "Very Low!" };
 
 		public bool established = false;
 		RoverScience roverScience = null;
@@ -67,8 +67,6 @@ namespace RoverScience
         {
             vhigh, high, normal, low, vlow
         }
-
-        private string[] potentialStrings = new string[]{"Very High!", "High", "Normal", "Low", "Very Low!"};
 
         public string getPotentialString(potentials potential)
         {
@@ -235,7 +233,8 @@ namespace RoverScience
             }
             else
             {
-                // Select a random one
+                // Select a random name if the roll was not successful
+                // This is to possibly mislead the player
                 predictedSpot = potentialStrings[rand.Next(0, potentialStrings.Length)];
             }
             Debug.Log("Spot prediction attempted!");

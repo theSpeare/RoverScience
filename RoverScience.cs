@@ -24,8 +24,8 @@ namespace RoverScience
 
 		public int levelMaxDistance = 1;
 		public int levelPredictionAccuracy = 1;
-        public int maximum_levelMaxDistance = 5;
-        public int maximum_predictionAccuracy = 5;
+        public readonly int maximum_levelMaxDistance = 5;
+        public readonly int maximum_predictionAccuracy = 5;
 
         public float currentPredictionAccuracy
         {
@@ -497,7 +497,8 @@ namespace RoverScience
         public void setScienceMaxRadiusBoost(int maxRadius)
         {
             //maxRadius' maximum value would only ever reach 2km (2000 meters)
-
+            //this method updates the factor used to increase the science depending
+            //on how far a given science spot has been spawned
             if (maxRadius < 150)
                 scienceMaxRadiusBoost = 1;
 
