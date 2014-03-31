@@ -17,22 +17,23 @@ namespace RoverScience
             {
                 return ResearchAndDevelopment.Instance.Science;
             }
-            set
-            {
-                ResearchAndDevelopment.Instance.Science = value;
-            }
         }
 
         private void drawUpgradeGUI(int windowID)
         {
+
+
             // UPGRADE WINDOW
             GUILayout.BeginVertical();
 
             GUILayout.BeginHorizontal();
-
-
+            GUILayout.FlexibleSpace();
+            GUILayout.Label("Science Available: " + currentScience);
+            GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
+            drawUpgradeType(RSUpgrade.maxDistance);
+            drawUpgradeType(RSUpgrade.predictionAccuracy);
 
             GUILayout.EndVertical();
         }
@@ -41,18 +42,21 @@ namespace RoverScience
         {
 
             int currentLevel = roverScience.getUpgradeLevel(upgradeType);
+            int nextLevel = currentLevel + 1;
             double upgradeValueNow = roverScience.getUpgradeValue(upgradeType, currentLevel);
-            double upgradeValueNext = (currentLevel < 5) ? roverScience.getUpgradeValue(upgradeType, (currentLevel+1)) : -1;
-            double upgradeCost = roverScience.getUpgradeCost(upgradeType, (currentLevel + 1));
+            double upgradeValueNext = roverScience.getUpgradeValue(upgradeType, (nextLevel));
+            double upgradeCost = roverScience.getUpgradeCost(upgradeType, (nextLevel));
 
+            
 
             GUILayout.BeginHorizontal();
             
             GUILayout.Label(roverScience.getUpgradeName(upgradeType));
             GUILayout.Space(5);
-            GUILayout.Button("Curent: " + upgradeValueNow);
-            GUILayout.Button("Next: " + upgradeValueNext);
-            GUILayout.Button("Cost: " + upgradeCost);
+            GUILayout.Button("Current: " + upgradeValueNow + " [" + currentLevel + "]");
+            GUILayout.Button("Next: " + (upgradeValueNext == -1 ? "MAX" : upgradeValueNext.ToString()));
+            GUILayout.Button("Cost: " + (upgradeCost == -1 ? "MAX" : upgradeCost.ToString()));
+            
             if (GUILayout.Button("UP"))
             {
                 roverScience.upgradeTech(upgradeType);

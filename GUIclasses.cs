@@ -9,6 +9,7 @@ namespace RoverScience
 
 		public GUIClass consoleGUI = new GUIClass();
 		public GUIClass debugGUI = new GUIClass();
+        public GUIClass upgradeGUI = new GUIClass();
 
 		public class GUIClass
 		{

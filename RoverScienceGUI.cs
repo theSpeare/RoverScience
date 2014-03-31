@@ -52,18 +52,27 @@ namespace RoverScience
 			Debug.Log ("RoverScienceGUI started");
 			consoleGUI.rect.width = 250;
 			debugGUI.rect.width = 230;
+            upgradeGUI.rect.width = 400;
 		}
 			
 
 		public void drawGUI()
 		{
-				if (consoleGUI.isOpen) {
-					consoleGUI.rect = GUILayout.Window (25639814, consoleGUI.rect, drawRoverConsoleGUI, "Rover Terminal");
-				}
+            if (consoleGUI.isOpen)
+            {
+                consoleGUI.rect = GUILayout.Window(25639814, consoleGUI.rect, drawRoverConsoleGUI, "Rover Terminal");
 
-				if (debugGUI.isOpen) {
-				debugGUI.rect = GUILayout.Window (9358921, debugGUI.rect, drawDebugGUI, "Debug");
-				}
+                if (upgradeGUI.isOpen)
+                {
+                    upgradeGUI.rect = GUILayout.Window(2389233, upgradeGUI.rect, drawUpgradeGUI, "Upgrade Menu");
+                }
+
+            }
+
+			if (debugGUI.isOpen) {
+			    debugGUI.rect = GUILayout.Window (9358921, debugGUI.rect, drawDebugGUI, "Debug");
+			}
+
 		}
 
 		public void addToConsole (string line)

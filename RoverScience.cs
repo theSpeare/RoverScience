@@ -24,6 +24,8 @@ namespace RoverScience
 
 		public int levelMaxDistance = 1;
 		public int levelPredictionAccuracy = 1;
+        public int maximum_levelMaxDistance = 5;
+        public int maximum_predictionAccuracy = 5;
 
         public float currentPredictionAccuracy
         {
@@ -377,6 +379,10 @@ namespace RoverScience
 
 		public float getUpgradeCost(RSUpgrade upgrade, int level)
 		{
+
+            if (level == 0) level = 1;
+            if (level > getUpgradeMaxLevel(upgrade)) return -1;
+
 			switch (upgrade)
 			{
 			case (RSUpgrade.maxDistance):
@@ -404,6 +410,7 @@ namespace RoverScience
 		{
 
 			if (level == 0) level = 1;
+            if (level > getUpgradeMaxLevel(upgrade)) return -1;
 
 			switch (upgrade)
 			{
@@ -430,9 +437,9 @@ namespace RoverScience
 			}
 		}
 
-        public int getUpgradeLevel(RSUpgrade upgrade)
+        public int getUpgradeLevel(RSUpgrade upgradeType)
         {
-            switch (upgrade)
+            switch (upgradeType)
             {
                 case (RSUpgrade.maxDistance):
                     return levelMaxDistance;
@@ -443,54 +450,48 @@ namespace RoverScience
             }
         }
 
-        public bool upgradeTech(RSUpgrade upgrade)
+        public int getUpgradeMaxLevel(RSUpgrade upgradeType)
         {
-            int maximum_levelMaxDistance = 5;
-            int maximum_predictionAccuracy = 5;
-
-            
-            switch (upgrade)
+            switch (upgradeType)
             {
                 case (RSUpgrade.maxDistance):
-                    if (levelMaxDistance == maximum_levelMaxDistance) return false;
-                    if (getUpgradeCost(RSUpgrade.maxDistance, levelMaxDistance + 1) >
-                        ResearchAndDevelopment.Instance.Science) {
-
-                        ScreenMessages.PostScreenMessage("Not enough science to upgrade", 3, ScreenMessageStyle.UPPER_CENTER);
-                        return false;
-                    }
-
-                    levelMaxDistance++;
-
-                    ResearchAndDevelopment.Instance.Science -= 
-                        getUpgradeCost(RSUpgrade.maxDistance, levelMaxDistance + 1);
-
-                    return true;
-
-
+                    return maximum_levelMaxDistance;
                 case (RSUpgrade.predictionAccuracy):
-                    if (levelPredictionAccuracy == maximum_predictionAccuracy) return false;
-                    if (getUpgradeCost(RSUpgrade.predictionAccuracy, levelPredictionAccuracy + 1) >
-                        ResearchAndDevelopment.Instance.Science) {
-
-                        ScreenMessages.PostScreenMessage("Not enough science to upgrade", 3, ScreenMessageStyle.UPPER_CENTER);
-                        return false;
-                    }
-
-                    levelPredictionAccuracy++;
-
-                    ResearchAndDevelopment.Instance.Science -=
-                          getUpgradeCost(RSUpgrade.predictionAccuracy, levelPredictionAccuracy + 1);
-
-                    return true;
-
-
+                    return maximum_predictionAccuracy;
                 default:
-                    
-                    return false;
-
-
+                    return -1;
             }
+        }
+
+        public void upgradeTech(RSUpgrade upgradeType)
+        {
+            int nextLevel = getUpgradeLevel(upgradeType) + 1;
+            int currentLevel = getUpgradeLevel(upgradeType);
+            int maxLevel = getUpgradeMaxLevel(upgradeType);
+            float nextCost = getUpgradeCost(upgradeType, nextLevel);
+            string upgradeName = getUpgradeName(upgradeType);
+
+            // MAX LEVEL REACHED
+            if (currentLevel >= maxLevel)
+            {
+                ScreenMessages.PostScreenMessage("Max Level reached for this upgrade",
+                    3, ScreenMessageStyle.UPPER_CENTER);
+            }
+            
+            // NOT ENOUGH SCIENCE
+            if (nextCost > ResearchAndDevelopment.Instance.Science)
+            {
+                ScreenMessages.PostScreenMessage("Not enough science to upgrade", 
+                    3, ScreenMessageStyle.UPPER_CENTER);
+                return;
+            }
+
+            // UPGRADE METHOD
+            levelMaxDistance++;
+            ResearchAndDevelopment.Instance.Science -= nextCost;
+
+            ScreenMessages.PostScreenMessage(("" + upgradeName + " has been upgraded"),
+                    3, ScreenMessageStyle.UPPER_CENTER);
         }
 
         public void setScienceMaxRadiusBoost(int maxRadius)
