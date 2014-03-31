@@ -1,6 +1,8 @@
 RoverScience
 ============
 
+**NOTE THAT THIS README IS VERY OUTDATED -- IT WILL BE UPDATED UPON THE NEXT PRE-RELEASE (PRE-RELEASE 4 AS OF NOW)**
+
 RoverScience is a KSP plugin that attempts to add more interactive functionality to the science system FOR rovers. The rover can be either manned, or unmanned (the former will be revised eventually).
 
 
