@@ -60,7 +60,7 @@ namespace RoverScience
 		{
             if (consoleGUI.isOpen)
             {
-                consoleGUI.rect = GUILayout.Window(25639814, consoleGUI.rect, drawRoverConsoleGUI, "Rover Terminal");
+				consoleGUI.rect = GUILayout.Window(25639814, consoleGUI.rect, drawRoverConsoleGUI, "Rover Terminal - " + roverScience.RSVersion);
 
                 if (upgradeGUI.isOpen)
                 {

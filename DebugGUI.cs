@@ -20,14 +20,14 @@ namespace RoverScience
 			GUILayout.Label ("distTravTotal: " + Math.Round(rover.distanceTraveledTotal));
 			GUIBreakline ();
 			GUILayout.Label ("currentScalarDecay: " + roverScience.scienceDecayScalar);
-			//GUILayout.Label ("scienceDistanceScalarBoost: " + roverScience.scienceDistanceScalarBoost);
+			GUILayout.Label ("scienceDistanceScalarBoost: " + roverScience.scienceMaxRadiusBoost);
 
 			GUILayout.Label ("ScienceSpot potential: " + rover.scienceSpot.potentialGenerated);
 
 			GUILayout.Label ("generatedScience: " + rover.scienceSpot.potentialScience);
 			GUILayout.Label ("with decay: " + rover.scienceSpot.potentialScience * roverScience.scienceDecayScalar);
-			//GUILayout.Label ("with distanceScalarBoost & decay & bodyScalar: " + rover.scienceSpot.potentialScience * 
-			//roverScience.scienceDecayScalar * roverScience.scienceDistanceScalarBoost * roverScience.bodyScienceScalar);
+			GUILayout.Label ("with distanceScalarBoost & decay & bodyScalar: " + rover.scienceSpot.potentialScience * 
+				roverScience.scienceDecayScalar * roverScience.scienceMaxRadiusBoost * roverScience.bodyScienceScalar);
 
 
 
@@ -85,7 +85,7 @@ namespace RoverScience
 			}
 
 			if (GUILayout.Button("0")){
-				roverScience.levelMaxDistance = 0;
+				roverScience.levelMaxDistance = 1;
 			}
 			GUILayout.EndHorizontal ();
 
@@ -104,9 +104,17 @@ namespace RoverScience
 			}
 
 			if (GUILayout.Button("0")){
-				roverScience.levelPredictionAccuracy = 0;
+				roverScience.levelPredictionAccuracy = 1;
 			}
 			GUILayout.EndHorizontal ();
+
+			if (GUILayout.Button ("+500 Science")) {
+				ResearchAndDevelopment.Instance.Science += 500;
+			}
+
+			if (GUILayout.Button ("-500 Science")) {
+				ResearchAndDevelopment.Instance.Science -= 500;
+			}
 
 			GUIBreakline ();
 			if (GUILayout.Button ("Close Window")) {

@@ -36,6 +36,7 @@ namespace RoverScience
             drawUpgradeType(RSUpgrade.predictionAccuracy);
 
             GUILayout.EndVertical();
+			GUI.DragWindow ();
         }
 
         private void drawUpgradeType(RSUpgrade upgradeType)
@@ -59,10 +60,12 @@ namespace RoverScience
             
             if (GUILayout.Button("UP"))
             {
+				Debug.Log ("Upgrade button pressed - " + upgradeType);
                 roverScience.upgradeTech(upgradeType);
             }
             
             GUILayout.EndHorizontal();
+
         }
     }
 }

@@ -11,7 +11,7 @@ namespace RoverScience
 	{
 
         private bool analyzeButtonPressedOnce = false;
-        private string inputMaxDistance = "";
+		private string inputMaxDistance = "100";
 
 		private void drawRoverConsoleGUI (int windowID)
 		{
@@ -35,6 +35,7 @@ namespace RoverScience
                     // PRINT OUT CONSOLE CONTENTS
 
                     GUILayout.Label("Drive around to search for science spots . . .");
+					GUILayout.Label ("Currently scanning with range: " + rover.maxRadius);
                     GUILayout.Label("Total dist. traveled searching for this spot: " + Math.Round(rover.distanceTraveledTotal, 2));
 					GUIBreakline ();
 					foreach (string line in consolePrintOut)
@@ -56,10 +57,10 @@ namespace RoverScience
                         GUILayout.Label("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
                         GUILayout.Label("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
                         GUIBreakline();
-                        GUILayout.Label(getDriveDirection(rover.bearingToScienceSpot, rover.heading));
+						GUILayout.Label("PREDICTION: " + rover.scienceSpot.predictedSpot + " (" + roverScience.currentPredictionAccuracy + "% chance of correct prediction)");
                         GUIBreakline();
-                        GUILayout.Label("PREDICTION: " + rover.scienceSpot.predictedSpot + " (" + roverScience.currentPredictionAccuracy + "% chance of correct prediction)");
-
+						GUIBreakline();
+						GUILayout.Label(getDriveDirection(rover.bearingToScienceSpot, rover.heading));
                     }
                     else
                     {
@@ -120,7 +121,7 @@ namespace RoverScience
 			}
             GUIBreakline();
             GUILayout.BeginHorizontal();
-            inputMaxDistance = GUILayout.TextField(inputMaxDistance, new GUILayoutOption[] { GUILayout.Width(50) });
+			inputMaxDistance = GUILayout.TextField(inputMaxDistance, 5, new GUILayoutOption[] { GUILayout.Width(50) });
             
             
             if (GUILayout.Button("Set Max Range (M: " + roverScience.currentMaxDistance + ")")){
@@ -129,22 +130,27 @@ namespace RoverScience
                 bool isNumber = int.TryParse(inputMaxDistance, out inputMaxDistanceInt);
 
 
-                if ((isNumber) && (inputMaxDistanceInt <= roverScience.currentMaxDistance))
+				if ((isNumber) && (inputMaxDistanceInt <= roverScience.currentMaxDistance) && (inputMaxDistanceInt >= 40))
                 {
                     rover.maxRadius = inputMaxDistanceInt;
+					Debug.Log ("Set maxRadius to input: " + rover.maxRadius);
                 }
             }
 
             GUILayout.EndHorizontal();
 
-            GUIBreakline();
-            GUIBreakline();
+			if (GUILayout.Button ("Upgrade Menu")) {
+				upgradeGUI.toggle ();
+			}
+
+			GUILayout.Space (5);
 			if (GUILayout.Button ("Close and Shutdown")) {
 				rover.scienceSpot.established = false;
 				rover.resetDistanceTraveled ();
 				consolePrintOut.Clear ();
 
 				consoleGUI.hide ();
+				upgradeGUI.hide ();
 			}
 
 

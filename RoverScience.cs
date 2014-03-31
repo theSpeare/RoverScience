@@ -15,7 +15,7 @@ namespace RoverScience
 	public class RoverScience : PartModule
 	{
 		// Not necessarily updated per build. Mostly updated per major commits
-		public readonly string RSVersion = "PRE-RELEASE 3.2";
+		public readonly string RSVersion = "PRE-RELEASE 4.0";
 		public static RoverScience Instance = null;
 		public System.Random rand = new System.Random ();
 		public ModuleScienceContainer container;
@@ -27,19 +27,19 @@ namespace RoverScience
         public readonly int maximum_levelMaxDistance = 5;
         public readonly int maximum_predictionAccuracy = 5;
 
-        public float currentPredictionAccuracy
+		public double currentPredictionAccuracy
         {
             get
             {
-                return getUpgradeCost(RSUpgrade.predictionAccuracy, levelPredictionAccuracy);
+				return getUpgradeValue(RSUpgrade.predictionAccuracy, levelPredictionAccuracy);
             }
         }
 
-        public float currentMaxDistance
+		public double currentMaxDistance
         {
             get
             {
-                return getUpgradeCost(RSUpgrade.maxDistance, levelMaxDistance);
+				return getUpgradeValue(RSUpgrade.maxDistance, levelMaxDistance);
             }
         }
 
@@ -203,7 +203,7 @@ namespace RoverScience
 				float sciData = (rover.scienceSpot.potentialScience) / sciSubject.subjectValue;
 				Debug.Log ("sciData (potential/20)" + sciData);
 				// Apply decay
-				sciData = sciData * scienceDecayScalar * bodyScienceScalar;
+				sciData = sciData * scienceDecayScalar * bodyScienceScalar * scienceMaxRadiusBoost;
 				Debug.Log ("rover.scienceSpot.potentialScience: " + rover.scienceSpot.potentialScience);
 				Debug.Log ("sciData (post scalar): " + sciData);
 				Debug.Log ("scienceDecayScalar: " + scienceDecayScalar);
@@ -399,6 +399,7 @@ namespace RoverScience
 				if (level == 2) return 2000;
 				if (level == 3) return 3000;
 				if (level == 4) return 4000;
+				if (level == 5) return 5000;
 
 				return -1;
 			default:
@@ -424,7 +425,7 @@ namespace RoverScience
 				return -1;
 
 			case (RSUpgrade.predictionAccuracy):
-                if (level == 1) return 0;
+				if (level == 1) return 10;
                 if (level == 2) return 20;
 				if (level == 3) return 50;
 				if (level == 4) return 70;
@@ -465,6 +466,7 @@ namespace RoverScience
 
         public void upgradeTech(RSUpgrade upgradeType)
         {
+			Debug.Log ("upgradeTech called: " + upgradeType);
             int nextLevel = getUpgradeLevel(upgradeType) + 1;
             int currentLevel = getUpgradeLevel(upgradeType);
             int maxLevel = getUpgradeMaxLevel(upgradeType);
@@ -476,6 +478,7 @@ namespace RoverScience
             {
                 ScreenMessages.PostScreenMessage("Max Level reached for this upgrade",
                     3, ScreenMessageStyle.UPPER_CENTER);
+				return;
             }
             
             // NOT ENOUGH SCIENCE
@@ -487,7 +490,17 @@ namespace RoverScience
             }
 
             // UPGRADE METHOD
-            levelMaxDistance++;
+			if (upgradeType == RSUpgrade.maxDistance) {
+				levelMaxDistance++;
+				Debug.Log ("Upgraded levelMaxDistance. Now level: " + levelMaxDistance);
+			} else if (upgradeType == RSUpgrade.predictionAccuracy) {
+				levelPredictionAccuracy++;
+				Debug.Log ("Upgraded predictionAccuracy. Now level: " + levelPredictionAccuracy);
+			}
+
+
+
+
             ResearchAndDevelopment.Instance.Science -= nextCost;
 
             ScreenMessages.PostScreenMessage(("" + upgradeName + " has been upgraded"),
@@ -502,7 +515,7 @@ namespace RoverScience
             if (maxRadius < 150)
                 scienceMaxRadiusBoost = 1;
 
-            scienceMaxRadiusBoost = (0.5f / 2000f) + 1f;
+			scienceMaxRadiusBoost = ((1f / 2000f) * maxRadius) + 1f;
         }
 
         public void keyboardShortcuts ()
