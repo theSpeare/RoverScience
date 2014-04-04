@@ -9,6 +9,8 @@ Firstly, RoverScience will not function unless the Rover Terminal is opened. Thi
 
 To do science with a rover, you must have a vessel with at least one wheel in contact with the ground. Wherever you land first with your wheels will establish a **landing spot**. Science is analyzed from **science spots**. To find a science spot you simply have to drive around; however, the farther you are from the landing spot the higher the chance of finding a **science spot**. Once a science spot has been found, the terminal will show the distance and bearing to the spot; heading and rel. heading will be shown as well. Simply drive to the spot (within 3m) and information will be shown about the spot.
 
+**Each analysis you commit to will slowly degrade a rover's return of science. For the first 3 analyses you'll get normal values, and anything past that will slowly degrade the amount of science you get back. Soak up those high potentials as much as possible!**
+
 Spots are given a random "potential science" where there is a:
 
 - 2% chance of generating a base value of (400-500) science.
