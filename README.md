@@ -1,10 +1,9 @@
 RoverScience
 ============
 
-**NOTE THAT THIS README IS VERY OUTDATED -- IT WILL BE UPDATED UPON THE NEXT PRE-RELEASE (PRE-RELEASE 4 AS OF NOW)**
+**UPDATED RELEASE 1.0**
 
 RoverScience is a KSP plugin that attempts to add more interactive functionality to the science system FOR rovers. The rover can be either manned, or unmanned (the former will be revised eventually).
-
 
 Firstly, RoverScience will not function unless the Rover Terminal is opened. This is done through the right-click menu of the Rover Brain part.
 
@@ -12,16 +11,21 @@ To do science with a rover, you must have a vessel with at least one wheel in co
 
 Spots are given a random "potential science" where there is a:
 
-- 2% chance of generating a base value of (400-700) science.
-- 19% chance (150-400)
-- 45% chance (70-150)
-- 70% chance (20-70)
-- else: (0 - 10)
+- 2% chance of generating a base value of (400-500) science.
+- 8% chance (200-400)
+- 65% chance (70-200)
+- 70% chance (30-70)
+- else: (0 - 30)
+
+Your rover will give out predictions on what the science spot potential may be - however this is subject to a chance accuracy, where the it basically rolls a chance percentage and, if successful, shows you the correct prediction. Otherwise it'll simply show you any other potential as a random mislead. It becomes somewhat important to improve the accuracy, which can be done through upgrades in the upgrade menu.
 
 Science is rolled from top to bottom so there is always a chance to generate the higher science values (albeit very low). A scalar modifier is applied for whichever body you are on. Furthermore the maximum science extractable from a body also differs from body to body. Logically, Kerbin's values should be very low.
 
-Biomes are not yet implemented yet (I believe so, but only because it hasn't been tested yet).
+The farther your science spot spawns, the more science it'll have (increased by a factor determined by its distance). If the spot is a low potential, and very far, it will still gain a distance boost, but obviously +50% of 10 science will only be 15, so be wary of driving out far for horrible spots.
 
+You can specify what distance maximum you'd like to scan for science spots on the console. You'll be restricted by a locked maximum distance which you can only increase through the upgrade menu.
+
+Biomes are not yet implemented yet (I believe so, but only because it hasn't been tested yet).
 
 
 ## NOTES
@@ -44,6 +48,12 @@ RoverScience is designed not to function unless the rover terminal is up. You ca
 #### CAREFUL WHEN ANALYZING!
 When over a science spot you are shown the science potential of the spot, not the actual science value. This is to add a decision-making aspect to choosing whether or not to analyze a spot, as you can either get a great value or a low value, but it's up to you to make the decision to take the chance.
 
-**As of pre-release 2, there is no longer a delay between analyses. However, each analysis will decrease the amount of science returned. The science should be normal from analyses 0 to 3, but after that the science will begin to get lower and lower. Make sure you take those high potentials as soon as possible!**
+**Each analysis you commit to will slowly degrade a rover's return of science. For the first 3 analyses you'll get normal values, and anything past that will slowly degrade the amount of science you get back. Soak up those high potentials as much as possible!**
 
 ALSO be CAREFUL - take care not to accidentally "delete" the actual science data itself after analyzing as you'll be there without any science data and with a 30 day cooldown.
+
+
+#### THE MENUS
+![image](http://i.imgur.com/NfbzPL1.png)
+
+Everything is pretty straight forward.
