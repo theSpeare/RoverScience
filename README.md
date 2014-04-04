@@ -57,3 +57,4 @@ ALSO be CAREFUL - take care not to accidentally "delete" the actual science data
 ![image](http://i.imgur.com/NfbzPL1.png)
 
 Everything is pretty straight forward.
+CTRL + R + S will open the RoverScience menu.
