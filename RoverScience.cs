@@ -15,7 +15,7 @@ namespace RoverScience
 	public class RoverScience : PartModule
 	{
 		// Not necessarily updated per build. Mostly updated per major commits
-		public readonly string RSVersion = "PRE-RELEASE 4.0";
+		public readonly string RSVersion = "1.0";
 		public static RoverScience Instance = null;
 		public System.Random rand = new System.Random ();
 		public ModuleScienceContainer container;
@@ -386,20 +386,20 @@ namespace RoverScience
 			switch (upgrade)
 			{
 			case (RSUpgrade.maxDistance):
-				if (level == 1) return 1000;
-				if (level == 2) return 2000;
-				if (level == 3) return 3000;
-				if (level == 4) return 4000;
-				if (level == 5) return 5000;
+				if (level == 1) return 200;
+				if (level == 2) return 250;
+				if (level == 3) return 400;
+				if (level == 4) return 550;
+				if (level == 5) return 1000;
 
 				return -1;
 			case (RSUpgrade.predictionAccuracy):
 
-				if (level == 1) return 1000;
-				if (level == 2) return 2000;
-				if (level == 3) return 3000;
-				if (level == 4) return 4000;
-				if (level == 5) return 5000;
+				if (level == 1) return 200;
+				if (level == 2) return 400;
+				if (level == 3) return 500;
+				if (level == 4) return 1000;
+				if (level == 5) return 2100;
 
 				return -1;
 			default:

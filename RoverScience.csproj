@@ -31,10 +31,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="Assembly-CSharp">
-      <HintPath>..\..\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\..\..\Games\KSP\Kerbal Space Program\KSP_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\Kerbal Space Program\KSP_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\..\..\Games\KSP\Kerbal Space Program\KSP_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -44,7 +44,6 @@
     <Compile Include="RoverScienceGUI.cs" />
     <Compile Include="Rover.cs" />
     <Compile Include="Extension Crap\KSPAddonFix.cs" />
-    <Compile Include="Extension Crap\SkipThroughMainMenu.cs" />
     <Compile Include="GUIClasses.cs" />
     <Compile Include="RandomConsolePrints.cs" />
     <Compile Include="ConsoleGUI.cs" />
@@ -55,4 +54,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
+  <ItemGroup>
+    <None Include="Extension Crap\SkipThroughMainMenu.cs" />
+  </ItemGroup>
 </Project>

@@ -18,7 +18,11 @@ namespace RoverScience
 			GUILayout.BeginVertical (GUIStyles.consoleArea);
 			scrollPosition = GUILayout.BeginScrollView (scrollPosition, new GUILayoutOption[]{GUILayout.Width(240), GUILayout.Height(340)});
 
+			GUILayout.BeginHorizontal (); GUILayout.FlexibleSpace ();
 			GUILayout.Label ("Times Analyzed: " + roverScience.amountOfTimesAnalyzed);
+			GUILayout.FlexibleSpace (); GUILayout.EndHorizontal ();
+
+
             GUIBreakline();
 
             if (!rover.landingSpot.established)
@@ -51,16 +55,22 @@ namespace RoverScience
                     if (!rover.scienceSpotReached)
                     {
                         double relativeBearing = rover.heading - rover.bearingToScienceSpot;
-                        GUILayout.Label("[POTENTIAL SCIENCE SPOT]");
+						GUILayout.Space (5);
+						GUILayout.Label("[POTENTIAL SCIENCE SPOT]");
                         GUILayout.Label("Distance to (m): " + Math.Round(rover.distanceFromScienceSpot, 1));
-                        GUILayout.Label("Bearing of Site (degrees): " + Math.Round(rover.bearingToScienceSpot, 1));
-                        GUILayout.Label("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
+						//GUILayout.Label("Bearing of Site (degrees): " + Math.Round(rover.bearingToScienceSpot, 1));
+						//GUILayout.Label("Rover Bearing (degrees): " + Math.Round(rover.heading, 1));
                         GUILayout.Label("Rel. Bearing (degrees): " + Math.Round(relativeBearing, 1));
                         GUIBreakline();
-						GUILayout.Label("PREDICTION: " + rover.scienceSpot.predictedSpot + " (" + roverScience.currentPredictionAccuracy + "% chance of correct prediction)");
+						GUILayout.Label("PREDICTION: " + rover.scienceSpot.predictedSpot + " (" + roverScience.currentPredictionAccuracy + "% accuracy)");
                         GUIBreakline();
 						GUIBreakline();
+
+						GUILayout.BeginHorizontal ();
+						GUILayout.FlexibleSpace ();
 						GUILayout.Label(getDriveDirection(rover.bearingToScienceSpot, rover.heading));
+						GUILayout.FlexibleSpace ();
+						GUILayout.EndHorizontal ();
                     }
                     else
                     {

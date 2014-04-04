@@ -20,3 +20,10 @@ F:\Github\RoverScience\bin\Debug\RoverScience.pdb
 F:\Github\RoverScience\obj\Debug\RoverScience.csprojResolveAssemblyReference.cache
 F:\Github\RoverScience\obj\Debug\RoverScience.dll
 F:\Github\RoverScience\obj\Debug\RoverScience.pdb
+C:\Users\Lui\Documents\GitHub\RoverScience\bin\Debug\Assembly-CSharp.dll
+C:\Users\Lui\Documents\GitHub\RoverScience\bin\Debug\UnityEngine.dll
+C:\Users\Lui\Documents\GitHub\RoverScience\bin\Debug\System.Xml.dll
+C:\Users\Lui\Documents\GitHub\RoverScience\bin\Debug\Mono.Cecil.dll
+C:\Users\Lui\Documents\GitHub\RoverScience\bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\Lui\Documents\GitHub\RoverScience\bin\Debug\TDx.TDxInput.dll
+C:\Users\Lui\Documents\GitHub\RoverScience\bin\Debug\Mono.Security.dll
