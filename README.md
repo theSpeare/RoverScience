@@ -52,7 +52,7 @@ When over a science spot you are shown the science potential of the spot, not th
 
 **Each analysis you commit to will slowly degrade a rover's return of science. For the first 3 analyses you'll get normal values, and anything past that will slowly degrade the amount of science you get back. Soak up those high potentials as much as possible!**
 
-ALSO be CAREFUL - take care not to accidentally "delete" the actual science data itself after analyzing as you'll be there without any science data and with a 30 day cooldown.
+ALSO be CAREFUL - take care not to accidentally "delete" the actual science data itself, as it will not refund you your analysis count.
 
 
 #### THE MENUS
